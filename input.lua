@@ -18,9 +18,15 @@ function love.joystickpressed(joystick, button)
     or event("joy_any", joystick, "button", button)
 end
 
-local axes = { hat = love.joystick.getHat(0, 0); love.joystick.getAxes(0) }
+local axes = {}
+for joy=0,love.joystick.getNumJoysticks()-1 do
+    eprintf("init joystick %d\n", joy)
+    axes[joy] = { hat = love.joystick.getHat(joy, 0); love.joystick.getAxes(0) }
+end
 
 function love.update(dt)
+    local old_axes
+    
     local function direction(value)
         return (value == 1 and "up")
         or (value == -1 and "down")
@@ -29,29 +35,30 @@ function love.update(dt)
     end
     
     local function do_axis(joy, axis, value)
-        if axes[axis] ~= value then
-            eprintf("axis %d:%d changed from %d to %d\n", joy, axis, value, axes[axis])
+        if old_axes[axis] ~= value then
             return event("joy_"..joy.."_axis_"..axis.."_"..direction(value))
             or event("joy_any", joy, "axis", axis, direction(value))
         end
     end
     
     local function do_hat(joy, value)
-        if value ~= axes.hat then
+        if value ~= old_axes.hat then
             return event("joy_"..joy.."_hat_"..value)
             or event("joy_any", joy, "hat", value)
         end
     end
     
-    local new_axes = { hat = love.joystick.getHat(0, 0); love.joystick.getAxes(0) }
-    
-    for axis,value in ipairs(new_axes) do
-        do_axis(0, axis, value)
+    for joy,joy_axes in pairs(axes) do
+        local new_axes = { hat = love.joystick.getHat(joy, 0); love.joystick.getAxes(joy) }
+        old_axes = joy_axes
+        
+        for axis,value in ipairs(new_axes) do
+            do_axis(joy, axis, value)
+        end
+        
+        do_hat(joy, new_axes.hat)
+        axes[joy] = new_axes
     end
-    
-    do_hat(0, new_axes.hat)
-    
-    axes = new_axes
     
     love.timer.sleep(33 - (dt*1000))
 end

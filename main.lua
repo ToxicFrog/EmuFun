@@ -163,7 +163,7 @@ function state.calibrate()
         elseif type == "axis" and b ~= "center" then
             name = ("joy_%d_axis_%d_%s"):format(joy, a, b)
         elseif type == "hat" and a ~= "c" then
-            name = ("joy_%d_hat_%d"):format(joy, a)
+            name = ("joy_%d_hat_%s"):format(joy, a)
         else
             return
         end
