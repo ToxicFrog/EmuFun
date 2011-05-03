@@ -1,0 +1,12 @@
+#!/bin/bash
+
+touch ~/.emufun
+source ~/.emufun
+
+[[ $GAMEDIR ]] || GAMEDIR="$HOME/Games"
+
+(cd "$GAMEDIR" && find -type f) | love . | {
+    read CFG
+    read ROM
+    env ROM="$GAMEDIR/$ROM" CFG="$GAMEDIR/$CFG" sh "$GAMEDIR/$CFG"
+}
