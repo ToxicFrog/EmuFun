@@ -31,7 +31,7 @@ function love.update(dt)
         return (value == 1 and "up")
         or (value == -1 and "down")
         or (value == 0 and "center")
-        or value
+        or "center"
     end
     
     local function do_axis(joy, axis, value)

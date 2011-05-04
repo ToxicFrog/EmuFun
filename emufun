@@ -1,15 +1,21 @@
 #!/bin/bash
 
+cd "$(dirname $0)"
+
 touch ~/.emufun
 source ~/.emufun
 
 [[ $GAMEDIR ]] || GAMEDIR="$HOME/Games"
 
 while true; do
+    qjoypad "EmuFun" &
     (cd "$GAMEDIR" && find -type f) | love . | {
         read CFG
         read ROM
+	echo "Launching $ROM using $CFG"
         env ROM="$GAMEDIR/$ROM" CFG="$GAMEDIR/$CFG" sh "$GAMEDIR/$CFG"
     }
     [[ $1 ]] || exit
 done
+
+tail -f /dev/null
