@@ -8,6 +8,8 @@ local configs = {}
 local currentSystemIndex
 local currentSystem
 
+local W,H
+
 input = {}
 
 function love.load()
@@ -45,6 +47,8 @@ function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setCaption("EmuFun")
     love.mouse.setVisible(false)
+    
+    W,H = love.graphics.getWidth(),love.graphics.getHeight()
 end
 
 -- "baseline" UI commands
@@ -105,22 +109,22 @@ function state.main()
         
         -- decorations at top
         lg.triangle("fill", 4, 12, 20, 2, 20, 22) 
-        lg.triangle("fill", 636, 12, 620, 2, 620, 22) 
-        lg.rectangle("fill", 0, 25, 640, 1)
+        lg.triangle("fill", W-4, 12, W-20, 2, W-20, 22) 
+        lg.rectangle("fill", 0, 25, W, 1)
         
         -- decorations at middle
-        lg.triangle("fill", 4, 220, 4, 240, 20, 230)
-        lg.triangle("fill", 636, 220, 636, 240, 620, 230)
+        lg.triangle("fill", 4, H/2-20, 4, H/2, 20, H/2-10)
+        lg.triangle("fill", W-4, H/2-20, W-4, H/2, W-20, H/2-10)
         
         -- print system name at top
-        clip(24, 0, 592, 24)
-        lg.printf(currentSystem.name, 0, 0, 640, "center")
+        clip(24, 0, W-48, 24)
+        lg.printf(currentSystem.name, 0, 0, W, "center")
         clip()
         
         -- print list of ROMs
-        clip(24, 26, 592, 480)
+        clip(24, 26, W-48, H)
         for i=1,#currentSystem do
-            lg.print(currentSystem[i], 24, 218 + i*28 - currentSystem.game * 28)
+            lg.print(currentSystem[i], 24, H/2-22 + i*28 - currentSystem.game * 28)
         end
         clip()
     end
@@ -146,8 +150,8 @@ function state.calibrate()
         local lg = love.graphics
         local clip = lg.setScissor
         
-        lg.printf("CALIBRATION", 0, 0, 640, "center")
-        lg.printf("Press button for "..commands[command], 0, 230, 640, "center")
+        lg.printf("CALIBRATION", 0, 0, W, "center")
+        lg.printf("Press button for "..commands[command], 0, H/2-20, W, "center")
     end
     
     function input.key_any(key)
