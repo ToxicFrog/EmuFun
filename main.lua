@@ -110,7 +110,7 @@ function state.main()
         -- decorations at top
         lg.triangle("fill", 4, 12, 20, 2, 20, 22) 
         lg.triangle("fill", W-4, 12, W-20, 2, W-20, 22) 
-        lg.rectangle("fill", 0, 25, W, 1)
+        lg.rectangle("fill", 0, 25, W, 2)
         
         -- decorations at middle
         lg.triangle("fill", 4, H/2-20, 4, H/2, 20, H/2-10)
@@ -139,7 +139,7 @@ function state.calibrate()
         if command > #commands then
             -- set up bindings
             for bind,name in pairs(binds) do
-                eprintf("binding %s to %s\n", name, bind)
+--                eprintf("binding %s to %s\n", name, bind)
                 input[name] = input["key_"..bind]
             end
             state.main()

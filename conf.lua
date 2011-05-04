@@ -4,8 +4,8 @@ function love.conf(t)
     t.identity = "emufun"
     t.version = 0
 
-    t.screen.width = 640
-    t.screen.height = 480
+    t.screen.width = 800
+    t.screen.height = 600
     t.screen.fullscreen = true
     t.screen.vsync = true
     t.screen.fsaa = 0
