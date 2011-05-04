@@ -9,7 +9,7 @@ source ~/.emufun
 
 while true; do
     qjoypad "EmuFun" &
-    (cd "$GAMEDIR" && find -type f) | love . | {
+    (cd "$GAMEDIR" && find * -type f) | love . | {
         read CFG
         read ROM
 	echo "Launching $ROM using $CFG"
