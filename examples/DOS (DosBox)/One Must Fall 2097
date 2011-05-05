@@ -1,0 +1,5 @@
+[autoexec]
+mount c ~/Games/.dos/OMF
+c:
+OMF
+exit

@@ -1,0 +1,6 @@
+[autoexec]
+mount c ~/Games/.dos/BMENACE
+c:
+BMENACE1
+exit
+

@@ -1,0 +1,5 @@
+[autoexec]
+mount c ~/Games/.dos/WW
+c:
+WW
+exit
