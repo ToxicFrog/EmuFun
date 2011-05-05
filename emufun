@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# wrapper script for the EmuFun frontend.
+# This is the part that repeatedly launches EmuFun, passing it a list of
+# games detected in the game directory.
+# If called without arguments, it runs EmuFun *once* and then exits - this
+# is useful for testing. If called with any arguments (doesn't matter what they
+# are), it runs forever.
+
 cd "$(dirname $0)"
 
 touch ~/.emufun
@@ -13,9 +20,11 @@ while true; do
         read CFG
         read ROM
 	echo "Launching $ROM using $CFG"
-        env ROM="$GAMEDIR/$ROM" CFG="$GAMEDIR/$CFG" sh "$GAMEDIR/$CFG"
+        env \
+            ROM="$GAMEDIR/$ROM" \
+            CFG="$GAMEDIR/$CFG" \
+            GAMEDIR="$GAMEDIR" \
+            sh "$GAMEDIR/$CFG"
     }
     [[ $1 ]] || exit
 done
-
-tail -f /dev/null
