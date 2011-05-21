@@ -3,6 +3,7 @@
 -- Note that it doesn't really support joystick axes except as d-pads - that is
 -- to say, pushing an axis all the way will register as (say) "up" and anything
 -- else is "center".
+input = {}
 
 -- Dispatch an event with the given names and arguments.
 -- Returns true if an event handler existed, false otherwise
