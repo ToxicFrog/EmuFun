@@ -24,8 +24,8 @@ Although primarily developed for (and only tested on) Linux, it should work on W
     
 EmuFun is written in Lua, using the LOVE gaming library and LuaFileSystem filesystem access library. To run it, you will need the following:
 
-* LOVE 0.7.2 or later (available from love2d.org)
-* LuaFileSystem (available from keplerproject.github.com/luafilesystem)
+    * LOVE 0.7.2 or later (available from love2d.org)
+    * LuaFileSystem (available from keplerproject.github.com/luafilesystem)
 
 If you are on Linux, both of these are likely available in your package manager.
 
@@ -97,9 +97,10 @@ A sample game library might look something like this (comments prefixed with #):
 The examples/ directory in the EmuFun source tree contains a number of sample configuration files for common programs and tasks (but no games, of course).
 
 The actual format of the configuration files depends on the loader defined (in settings.lua). However, by default, they are simple Bash scripts. When the corresponding game is chosen, the configuration file is executed by bash with the following environment variables defined:
-* GAMEDIR - the path to the game library, originally passed to EmuFun
-* GAME - the path to the game file (eg, $GAMEDIR/SNES/Super Metroid)
-* CONFIG - the path to the configuration file (eg, $GAMEDIR/SNES/.config)
+
+    * GAMEDIR - the path to the game library, originally passed to EmuFun
+    * GAME - the path to the game file (eg, $GAMEDIR/SNES/Super Metroid)
+    * CONFIG - the path to the configuration file (eg, $GAMEDIR/SNES/.config)
 
 A typical configuration file simply launches a system-appropriate emulator passing it $GAME as the file to execute.
 
