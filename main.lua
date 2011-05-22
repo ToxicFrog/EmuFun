@@ -10,7 +10,7 @@ require "settings"
 
 function love.load()
     eprintf("Reading game library:")
-    emufun.root = node.new(os.getenv("GAMEDIR"))
+    emufun.root = node.new(arg[2] or os.getenv("GAMEDIR") or ".")
     emufun.root:populate()
     for sys in emufun.root:children() do
         sys:populate()

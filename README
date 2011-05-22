@@ -1,0 +1,107 @@
+    Contents
+    ========
+
+1.	Overview
+2.  Requirements
+3.  Invocation
+4.  Usage
+5.  Game Library Structure
+6.  Configuration File Format
+
+
+    1. Overview
+    ===========
+
+EmuFun is a frontend for gamepad control of computers, specifically for easily launching various programs and shutting down the system using the gamepad. As the name implies, it is primarily intended for launching emulators and similar programs, allowing a single computer connected to a TV to take the place of several physical gaming consoles. However, it can also be easily used for launching native games, non-game applications, or media players.
+
+EmuFun is game-agnostic; it doesn't actually know anything about different games or emulators, instead relying on user-provided configuration files to launch games and do any other tasks required (such as configuring gamepad->keyboard mappers for games that lack gamepad support). Sample configuration files for some common emulators, games, and tasks are included.
+
+Although primarily developed for (and only tested on) Linux, it should work on Windows and OSX as well with minimal changes.
+
+
+    2. Requirements
+    ===============
+    
+EmuFun is written in Lua, using the LOVE gaming library and LuaFileSystem filesystem access library. To run it, you will need the following:
+
+* LOVE 0.7.2 or later (available from love2d.org)
+* LuaFileSystem (available from keplerproject.github.com/luafilesystem)
+
+If you are on Linux, both of these are likely available in your package manager.
+
+
+    3. Invocation
+    =============
+
+If you have EmuFun installed as a .love file, you can run it with:
+
+    $ love /path/to/EmuFun.love
+
+If you have it installed as an unpacked directory, run it with:
+
+    $ love /path/to/EmuFun
+
+In either case, it accepts an optional argument, the path to your game directory; for example:
+
+    $ love EmuFun.love $HOME/Games
+
+If this is omitted, it will use the GAMEDIR environment variable; if that is unset, it will default to ./, the current working directory. Thus, either of these are equivalent to the above:
+
+    $ env GAMEDIR="$HOME/Games" love EmuFun.love
+    $ cd $HOME/Games && love EmuFun.love
+
+
+    4. Usage
+    ========
+
+When EmuFun starts up, it will present you with a calibration screen asking you to press buttons for the four directions, OK (used to enter directories and launch games), and Cancel (used to leave directories). It will do this each time it runs.
+
+Once calibration is complete, you will be presented with a list of games, and a system name at the top. Press Left or Right to change system; press Up or Down to scroll through the list of games. Press OK to launch a game or enter a directory; press Cancel to leave a directory you've previously entered.
+
+
+    5. Game Library Structure
+    =========================
+
+EmuFun expects a fairly simple structure in $GAMEDIR: each directory in $GAMEDIR is expected to correspond to a system or category, and everything inside those is either a game or a directory full of games. Dotfiles are hidden; anything ending in ".config" is also hidden.
+
+When loading a game, EmuFun first looks for a game-specific config file, with the same name and location as the game but with a ".config" extension. If it doesn't find one, it then looks for a file named ".config" in the same directory as the game, then for a ".config" in the parent directory, and so forth until it finishes by looking for $GAMEDIR/.config.
+
+A sample game library might look something like this (comments prefixed with #):
+
+    $GAMEDIR/
+      SNES/
+        .config                 # configuration file common to all SNES games
+        Super Aleste            # Super Aleste ROM image
+        Super Metroid           # Super Metroid ditto
+        Lemmings                # SNES version of Lemmings needs special options
+        Lemmings.config         # ...so it gets its own .config file
+      Linux/
+        .config                 # this probably just runs the game of the same
+                                # name in /usr/bin or whatever
+        Tux Racer
+        StepMania
+        xKobo
+      PlayStation/
+        .config                 # probably launches PCSX or similar
+        Megaman X4              # actually an ISO image
+        Final Fantasy VII/      # keeps the discs organized
+          .config               # custom emulator config for FF7
+          Disc 1
+          Disc 2
+          Disc 3
+        
+          
+    6. Configuration File Format
+    ============================
+
+The examples/ directory in the EmuFun source tree contains a number of sample configuration files for common programs and tasks (but no games, of course).
+
+The actual format of the configuration files depends on the loader defined (in settings.lua). However, by default, they are simple Bash scripts. When the corresponding game is chosen, the configuration file is executed by bash with the following environment variables defined:
+* GAMEDIR - the path to the game library, originally passed to EmuFun
+* GAME - the path to the game file (eg, $GAMEDIR/SNES/Super Metroid)
+* CONFIG - the path to the configuration file (eg, $GAMEDIR/SNES/.config)
+
+A typical configuration file simply launches a system-appropriate emulator passing it $GAME as the file to execute.
+
+
+:wrap=soft:
