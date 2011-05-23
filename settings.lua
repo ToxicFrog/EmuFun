@@ -4,7 +4,7 @@
 -- for Linux, which assumes config files are actually bash scripts.
 function emufun.launch(gamedir, rom, config)
     love.graphics.toggleFullscreen()
-    os.execute('env GAMEDIR="%s" ROM="%s" CONFIG="%s" bash "%s"' % {
+    os.execute('env GAMEDIR="%s" GAME="%s" CONFIG="%s" bash "%s"' % {
         gamedir,
         rom,
         config,
