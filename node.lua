@@ -66,9 +66,9 @@ function node:find_config()
         return lfs.attributes(path, "mode") == "file"
     end
     
-    -- check to see if $ROM.config exists
-    if exists(self:path()..".config") then
-        return self:path()..".config"
+    -- check to see if .config.$ROM exists
+    if exists(self.parent:path().."/.config."..self.name) then
+        return exists(self.parent:path().."/.config."..self.name)
     end
     
     -- if not, work our way up the directory tree looking for a ".config" file
