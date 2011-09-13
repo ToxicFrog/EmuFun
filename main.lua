@@ -19,14 +19,6 @@ function love.load()
     love.filesystem.write("settings.lua", love.filesystem.read("settings.lua"))
     eprintf("done.\n")
     
-    eprintf("Reading game library: ")
-    emufun.root = node.new(arg[2] or os.getenv("GAMEDIR") or ".")
-    emufun.root:populate()
-    for sys in emufun.root:children() do
-        sys:populate()
-    end
-    eprintf("done\n")
-    
     eprintf("Setup renderer: ")
     axes = { hat = love.joystick.getHat(0, 0); love.joystick.getAxes(0) }
     
