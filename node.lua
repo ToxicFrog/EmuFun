@@ -107,7 +107,7 @@ function node:run()
     -- if the game starts with "--!emufun", it's an emufun script and should
     -- be loaded and run directly
     if io.readn(self:path(), 9) == "--!emufun" then
-        assert(loadfile(self:path()))(self)
+        pcall(loadfile(self:path()), self)
         return self.parent
     end
     
