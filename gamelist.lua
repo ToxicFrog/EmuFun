@@ -10,7 +10,7 @@ function emufun.gamelist()
     if not emufun.root:type() then
         -- can't find game directory, oops
         eprintf("failed!\n")
-        return emufun.filenotfound("gamedir is missing or inaccessible")
+        return emufun.filenotfound("Directory is missing or inaccessible")
     end
     
     emufun.root:populate()
@@ -21,7 +21,7 @@ function emufun.gamelist()
     if not emufun.root[1] then
         -- we couldn't find anything in the gamedir!
         eprintf("failed!\n")
-        return emufun.filenotfound("gamedir is empty")
+        return emufun.filenotfound("Directory is empty")
     end
     eprintf("done\n")
     

@@ -7,11 +7,11 @@ end
 require "lfs"
 
 load "util"
-load "util"
 load "input"
 load "node"
 load "calibration"
 load "gamelist"
+load "filenotfound"
 
 function love.load()
     eprintf("Loading user settings: ")
