@@ -36,5 +36,11 @@ function emufun.quit()
     love.event.push "q"
 end
 
--- q is hardbound to quit
+function emufun.restart()
+    load "main"
+    return love.load()
+end
+
+-- q is hardbound to quit, and r to restart
 input.key_q = emufun.quit
+input.key_r = emufun.restart
