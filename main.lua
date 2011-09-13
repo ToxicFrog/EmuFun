@@ -10,6 +10,7 @@ load "util"
 load "input"
 load "node"
 load "calibration"
+load "loadgames"
 load "gamelist"
 load "filenotfound"
 
@@ -29,7 +30,7 @@ function love.load()
     love.mouse.setVisible(false)
     eprintf("done\n")
     
-    emufun.calibration()
+    return emufun.calibration()
 end
 
 function emufun.quit()

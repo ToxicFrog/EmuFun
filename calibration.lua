@@ -28,7 +28,7 @@ function emufun.calibration()
         
         table.copy(controls, input)
         
-        return emufun.gamelist()
+        return emufun.loadgames()
     end
     
     local calibrator = co.wrap(calibrate)

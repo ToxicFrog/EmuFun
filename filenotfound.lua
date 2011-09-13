@@ -1,13 +1,14 @@
+-- this is called when we don't have a valid game directory for
+-- whatever reason. It sets up a fake gamedir in memory which the user can
+-- use to quit or restart
 function emufun.filenotfound(reason)
-    local W,H = love.graphics.getWidth(),love.graphics.getHeight()
-    input.key_any = nil
-    input.joy_any = nil
+    emufun.root = node:new("DUMMY")
+    
+    local screen = emufun.root:add("Error: "..reason)
+    function screen:populate() end
 
-    function love.draw()
-        local lg = love.graphics
-        local clip = lg.setScissor
-
-        lg.printf("Error reading game directory:\n"..(os.getenv("GAMEDIR") or "./").."\n\n"..reason, 20, 40, W-40, "center")
-        
-    end
+    screen:add_command("Restart EmuFun", emufun.restart)
+    screen:add_command("Quit EmuFun", emufun.quit)
+    
+    return emufun.gamelist()
 end
