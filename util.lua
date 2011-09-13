@@ -18,3 +18,13 @@ function io.readn(name, len)
     fd:close()
     return buf
 end
+
+function table.copy(from, to)
+    to = to or {}
+    
+    for k,v in pairs(from) do
+        to[k] = v
+    end
+    
+    return to
+end

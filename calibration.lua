@@ -3,20 +3,31 @@ local co = coroutine
 function emufun.calibration()
     local W,H = love.graphics.getWidth(),love.graphics.getHeight()
     local message = "?"
+    local controls = {}
     
     local function calibrate()
         local function ask_input(gesture)
-            return co.yield(gesture)
+            local key
+            repeat
+                key = co.yield(gesture)
+                print(key, controls[key])
+            until not controls[key]
+            return key
         end
+        
         local function command(gesture, fn)
-            input[ask_input(gesture)] = fn
+            controls[ask_input(gesture)] = fn
         end
+        
         command("up", emufun.prev_game)
         command("down", emufun.next_game)
         command("left", emufun.prev_system)
         command("right", emufun.next_system)
         command("ok", emufun.down)
         command("cancel", emufun.up)
+        
+        table.copy(controls, input)
+        
         return emufun.gamelist()
     end
     
