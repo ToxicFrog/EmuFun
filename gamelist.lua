@@ -33,6 +33,15 @@ function emufun.gamelist()
         for i=1,#system.dir do
             lg.print(system.dir[i].name, 24, H/2-22 + i*28 - system.dir.index * 28)
         end
+        
+        -- print currently selected ROM
+        -- this can be nil if the directory is empty
+        if system.dir[system.dir.index] then
+            lg.setColor(128, 255, 128)
+            lg.print(system.dir[system.dir.index].name, 24, H/2-22)
+            lg.setColor(255, 255, 255)
+        end
+        
         clip()
     end
 end
