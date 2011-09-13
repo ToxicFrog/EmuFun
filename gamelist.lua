@@ -74,10 +74,6 @@ end
 -- if it's a directory, we should scan it if necessary, then cd into it
 -- if it's a file, we should find its associated .config and then launch it
 function emufun.down()
-    if system.dir:selected():type() == "directory" then
-        system.dir = system.dir:selected()
-        system.dir:populate()
-    else
-        emufun.launch(emufun.root:path(), system.dir:selected():path(), system.dir:selected():find_config())
-    end
+    system.dir = system.dir:selected():run()
+    system.dir:populate()
 end

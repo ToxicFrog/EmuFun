@@ -82,3 +82,23 @@ function node:find_config()
     
     return nil
 end
+
+function node:run()
+    -- "running" a directory just populates it and CDs into it
+    if self:type() == "directory" then
+        self:populate()
+        return self
+    end
+    
+    -- if the game starts with "--!emufun", it's an emufun script and should
+    -- be loaded and run directly
+    if io.readn(self:path(), 9) == "--!emufun" then
+        assert(loadfile(self:path()))(self)
+        return self.parent
+    end
+    
+    -- running a game executes it with emufun.launch and returns its containing
+    -- directory
+    emufun.launch(emufun.root:path(), self:path(), self:find_config())
+    return self.parent
+end
