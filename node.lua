@@ -55,7 +55,10 @@ function node:selected()
 end
 
 function node:populate()
-    if self.populated then return end
+    -- clear existing population
+    for i=1,#self do
+        self[i] = nil
+    end
     
     for item in lfs.dir(self:path()) do
         if not (item:match("^%.") or item:match("%.config$")) then
@@ -66,7 +69,11 @@ function node:populate()
     end
     
     self:sort()
-    self.populated = true
+    
+    -- bring index within bounds
+    if self.index > #self then
+        self.index = 1
+    end
 end
 
 function node:children()

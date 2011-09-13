@@ -57,16 +57,19 @@ end
 function emufun.prev_system()
     emufun.root:prev()
     system = emufun.root[emufun.root.index]
+    system:populate()
 end
 
 function emufun.next_system()
     emufun.root:next()
     system = emufun.root[emufun.root.index]
+    system.dir:populate()
 end
 
 function emufun.up()
     if system.dir ~= system then
         system.dir = system.dir.parent
+        system.dir:populate()
     end
 end
 
