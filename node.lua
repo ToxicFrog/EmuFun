@@ -65,8 +65,6 @@ function node:populate()
         
         -- don't add items starting with .
         if not item:match("^%.")
-            -- or items ending in .config
-            and not item:match("%.config$")
             -- or items that aren't files or directories
             and (lfs.attributes(itempath, "mode") == "file"
                  or lfs.attributes(itempath, "mode") == "directory")
