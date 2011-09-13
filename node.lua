@@ -61,7 +61,16 @@ function node:populate()
     end
     
     for item in lfs.dir(self:path()) do
-        if not (item:match("^%.") or item:match("%.config$")) then
+        local itempath = self:path().."/"..item
+        
+        -- don't add items starting with .
+        if not item:match("^%.")
+            -- or items ending in .config
+            and not item:match("%.config$")
+            -- or items that aren't files or directories
+            and (lfs.attributes(itempath, "mode") == "file"
+                 or lfs.attributes(itempath, "mode") == "directory")
+        then
             self:add(item)
         elseif item == ".emufun" then
             pcall(loadfile(self:path().."/.emufun"), self)

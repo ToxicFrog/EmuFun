@@ -2,8 +2,6 @@ local system
 
 function emufun.gamelist()
     local W,H = love.graphics.getWidth(),love.graphics.getHeight()
-    input.key_any = nil
-    input.joy_any = nil
     
     system = emufun.root[1]
     for sys in emufun.root:children() do

@@ -28,6 +28,9 @@ function emufun.calibration()
         
         table.copy(controls, input)
         
+        input.key_any = nil
+        input.joy_any = nil
+        
         return emufun.loadgames()
     end
     
