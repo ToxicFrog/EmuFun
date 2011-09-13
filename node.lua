@@ -12,6 +12,18 @@ function node:add(child)
     end
     
     table.insert(self, child)
+    return child
+end
+
+function node:add_command(name, fn)
+    local child = node.new(name, self)
+    
+    function child:run()
+        fn(child)
+        return child.parent
+    end
+    
+    self:add(child)
 end
 
 function node:sort()
@@ -48,6 +60,8 @@ function node:populate()
     for item in lfs.dir(self:path()) do
         if not (item:match("^%.") or item:match("%.config$")) then
             self:add(item)
+        elseif item == ".emufun" then
+            pcall(loadfile(self:path().."/.emufun"), self)
         end
     end
     
