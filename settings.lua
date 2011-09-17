@@ -30,6 +30,26 @@ function emufun.launch(gamedir, rom, config)
     if emufun.FULLSCREEN then love.graphics.toggleFullscreen() end
 end
 
+-- this is the default launcher for windows, which assumes the configuration
+-- file is a batch file. Arguments are passed in on the command line. Forward
+-- slashes are converted into backslashes to work around bugs in some programs
+-- such as VLC.
+--[[
+function emufun.launch(gamedir, rom, config)
+    if emufun.FULLSCREEN then love.graphics.toggleFullscreen() end
+    
+    os.execute('call "%s" "%s" "%s" "%s"' % {
+        config:gsub("/", "\\"),
+        gamedir:gsub("/", "\\"),
+        rom:gsub("/", "\\"),
+        config:gsub("/", "\\")
+    })
+    love.event.clear()
+
+    if emufun.FULLSCREEN then love.graphics.toggleFullscreen() end
+end
+--]]
+
 -- this is the "old-style" launcher, for when emufun is called by another program
 -- which expects it to output the settings on stdout and then exit
 --[[
