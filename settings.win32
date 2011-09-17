@@ -1,9 +1,12 @@
 -- user configurable settings
 
 -- the configuration file prefix
-emufun.CONFIG = ".config"
+-- the .bat suffix is needed or 'call' will go insane
+emufun.CONFIG = ".config.bat"
 
 -- the default location of the game/media directory
+-- on windows, you cannot use a trailing slash here or it will fail
+-- so, "M:/EmuFun" and "M:\\EmuFun" are both ok, but "M:/EmuFun/" is not.
 emufun.GAMEDIR = "."
 
 -- graphics configuration. If omitted or commented out (which is the default),
@@ -12,17 +15,18 @@ emufun.GAMEDIR = "."
 --emufun.HEIGHT = 1050
 --emufun.FULLSCREEN = true
 
--- this function is used to launch a game. This is the standard configuration
--- for Linux, which assumes config files are actually bash scripts. Arguments
--- are passed in as environment variables GAMEDIR, GAME, and CONFIG.
+-- this is the default launcher for windows, which assumes the configuration
+-- file is a batch file. Arguments are passed in on the command line. Forward
+-- slashes are converted into backslashes to work around bugs in some programs
+-- such as VLC.
 function emufun.launch(gamedir, rom, config)
     if emufun.FULLSCREEN then love.graphics.toggleFullscreen() end
     
-    os.execute('env GAMEDIR="%s" GAME="%s" CONFIG="%s" bash "%s"' % {
-        gamedir,
-        rom,
-        config,
-        config
+    os.execute('call "%s" "%s" "%s" "%s"' % {
+        config:gsub("/", "\\"),
+        gamedir:gsub("/", "\\"),
+        rom:gsub("/", "\\"),
+        config:gsub("/", "\\")
     })
     love.event.clear()
 
