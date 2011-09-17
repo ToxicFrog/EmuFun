@@ -1,6 +1,6 @@
 function emufun.loadgames()
     eprintf("Reading game library: ")
-    emufun.root = node.new(arg[2] or os.getenv("GAMEDIR") or ".")
+    emufun.root = node.new(arg[2] or os.getenv("GAMEDIR") or emufun.GAMEDIR)
     if not emufun.root:type() then
         -- can't find game directory, oops
         eprintf("failed!\n")

@@ -95,16 +95,16 @@ function node:find_config()
     end
     
     -- check to see if .config.$ROM exists
-    if exists(self.parent:path().."/.config."..self.name) then
-        return self.parent:path().."/.config."..self.name
+    if exists(self.parent:path().."/"..emufun.CONFIG..self.name) then
+        return self.parent:path().."/"..emufun.CONFIG..self.name
     end
     
     -- if not, work our way up the directory tree looking for a ".config" file
     -- in each directory
     while self.parent do
         self = self.parent
-        if exists(self:path().."/.config") then
-            return self:path().."/.config"
+        if exists(self:path().."/"..emufun.CONFIG) then
+            return self:path().."/"..emufun.CONFIG
         end
     end
     
