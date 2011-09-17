@@ -2,7 +2,7 @@ function love.conf(t)
     t.name = "EmuFun"
     t.author = "Ben 'ToxicFrog' Kelly"
     t.identity = "emufun"
-    t.version = 0
+    t.version = 1.0
 
     t.screen.width = 800
     t.screen.height = 600
