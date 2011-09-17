@@ -19,8 +19,7 @@ function node:add_command(name, fn)
     local child = node.new(name, self)
     
     function child:run()
-        fn(child)
-        return child.parent
+        return fn(child) or child.parent
     end
     
     self:add(child)
@@ -155,6 +154,15 @@ function node:run()
     
     -- running a game executes it with emufun.launch and returns its containing
     -- directory
-    emufun.launch(emufun.root:path(), self:path(), self:find_config())
-    return self.parent
+    if self:find_config() then
+        emufun.launch(emufun.root:path(), self:path(), self:find_config())
+        return self.parent
+    end
+    
+    -- return an error message
+    local err = node.new("ERROR", self.parent)
+    function err:populate() end
+    err:add_command("Couldn't find configuration file!", function() end)
+    err[1].parent = self.parent
+    return err
 end
