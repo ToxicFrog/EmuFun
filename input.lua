@@ -5,6 +5,9 @@
 -- else is "center".
 input = {}
 
+-- timers used for key-repeat settings
+local timers = {}
+
 -- Dispatch an event with the given names and arguments.
 -- Returns true if an event handler existed, false otherwise
 local function event(name, ...)
@@ -15,11 +18,40 @@ local function event(name, ...)
     return false
 end
 
+local function start_timer(name)
+    if timers[name] then
+        timers[name].t = timers[name].delay
+    end
+end
+
+local function stop_timer(name)
+    if timers[name] then
+        timers[name].t = nil
+    end
+end
+
+-- enable key repeat for the given event
+-- delay the amount of time to wait until it starts repeating, period is how
+-- frequently to emit the repeated events.
+-- eg: love.set_repeat("key_a", 1.0, 0.5)
+function love.set_repeat(event, delay, period)
+    if delay then
+        timers[event] = { delay = delay, period = period }
+    else
+        timers[event] = nil
+    end
+end
+
 -- love2d callback function for keyboard events. Pressing 'a' will trigger event
 -- key_a() or, if that doesn't exist, key_any('a')
 function love.keypressed(name, num)
+    start_timer("key_"..name)
     return event("key_"..name)
     or event("key_any", name)
+end
+
+function love.keyreleased(name, num)
+    stop_timer("key_"..name)
 end
 
 -- same as above, but for joysticks. Joystick events are parameterized by both
@@ -27,8 +59,15 @@ end
 function love.joystickpressed(joystick, button)
     local name = "joy_"..joystick.."_button_"..button
     
+    start_timer(name)
     return event(name)
     or event("joy_any", joystick, "button", button)
+end
+
+function love.joystickreleased(joystick, button)
+    local name = "joy_"..joystick.."_button_"..button
+    
+    stop_timer(name)
 end
 
 -- joystick axis handling. At initialization, read the state of every axis on
@@ -42,6 +81,8 @@ end
 
 -- Every frame, scan joystick axes, compare them to the previous frame, and
 -- emit events for any that have changed.
+-- We also need to update timers for key-repeat-enabled events, and fire those
+-- events as needed.
 function love.update(dt)
     local old_axes
     
@@ -64,6 +105,9 @@ function love.update(dt)
     -- FIXME: this should work for multiple hats on the same stick.
     local function do_hat(joy, value)
         if value ~= old_axes.hat then
+            stop_timer("joy_"..joy.."_hat_"..old_axes.hat)
+            start_timer("joy_"..joy.."_hat_"..value)
+            
             return event("joy_"..joy.."_hat_"..value)
             or event("joy_any", joy, "hat", value)
         end
@@ -80,6 +124,17 @@ function love.update(dt)
         
         do_hat(joy, new_axes.hat)
         axes[joy] = new_axes
+    end
+    
+    -- update timers
+    for evt,timer in pairs(timers) do
+        if timer.t then
+            timer.t = timer.t - dt
+            if timer.t <= 0 then
+                timer.t = timer.period
+                event(evt)
+            end
+        end
     end
     
     -- cap framerate at 30fps

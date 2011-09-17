@@ -15,11 +15,13 @@ function emufun.calibration()
         end
         
         local function command(gesture, fn)
-            controls[ask_input(gesture)] = fn
+            local event = ask_input(gesture)
+            controls[event] = fn
+            return event
         end
         
-        command("up", emufun.prev_game)
-        command("down", emufun.next_game)
+        love.set_repeat(command("up", emufun.prev_game), 0.5, 0.1)
+        love.set_repeat(command("down", emufun.next_game), 0.5, 0.1)
         command("left", emufun.prev_system)
         command("right", emufun.next_system)
         command("ok", emufun.down)
