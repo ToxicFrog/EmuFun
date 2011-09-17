@@ -21,7 +21,6 @@ function love.load()
     eprintf("done.\n")
     
     eprintf("Setup renderer: ")
-    axes = { hat = love.joystick.getHat(0, 0); love.joystick.getAxes(0) }
     
     --love.graphics.setFont("LiberationMono-Bold.ttf", 24)
     love.graphics.setFont(24)
