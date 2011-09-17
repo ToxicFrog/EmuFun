@@ -10,7 +10,6 @@ function emufun.calibration()
             local key
             repeat
                 key = co.yield(gesture)
-                print(key, controls[key])
             until not controls[key]
             return key
         end
@@ -31,7 +30,7 @@ function emufun.calibration()
         input.key_any = nil
         input.joy_any = nil
         
-        return emufun.loadgames()
+        co.yield(nil)
     end
     
     local calibrator = co.wrap(calibrate)
@@ -46,6 +45,9 @@ function emufun.calibration()
         
     function input.key_any(key)
         message = calibrator("key_"..key)
+        if not message then
+            return emufun.loadgames()
+        end
     end
         
     function input.joy_any(joy, type, a, b)
