@@ -62,5 +62,8 @@ function emufun.calibration()
             return
         end
         message = calibrator(name)
+        if not message then
+            return emufun.loadgames()
+        end
     end
 end
