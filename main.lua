@@ -4,6 +4,8 @@ function load(module)
     return assert(love.filesystem.load(module..".lua"))()
 end
 
+print(io.open)
+
 require "lfs"
 
 load "util"
@@ -38,7 +40,7 @@ function love.load()
     end
     
     --love.graphics.setFont("LiberationMono-Bold.ttf", 24)
-    love.graphics.setFont(24)
+    love.graphics.setNewFont(24)
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setCaption("EmuFun")
     love.mouse.setVisible(false)
@@ -48,7 +50,7 @@ function love.load()
 end
 
 function emufun.quit()
-    love.event.push "q"
+    love.event.push "quit"
 end
 
 function emufun.restart()

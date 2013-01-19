@@ -25,7 +25,7 @@ Although primarily developed for (and only tested on) Linux, it should work on W
 EmuFun is written in Lua, using the LOVE gaming library and LuaFileSystem filesystem access library. To run it, you will need the following:
 
     * EmuFun itself (either as a source tree or as a .love file)
-    * LOVE 0.7.2 (available from love2d.org); 0.8 or later will not (yet) work
+    * LOVE 0.8.x (available from love2d.org)
     * LuaFileSystem (available from keplerproject.github.com/luafilesystem)
 
 If you are on Linux, both of these are likely available in your package manager.
