@@ -138,6 +138,5 @@ function love.update(dt)
     end
     
     -- cap framerate at 30fps
-    love.timer.sleep(33 - (dt*1000))
+    love.timer.sleep(1/30 - dt)
 end
-
