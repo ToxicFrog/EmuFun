@@ -4,8 +4,6 @@ function load(module)
     return assert(love.filesystem.load(module..".lua"))()
 end
 
-print(io.open)
-
 require "lfs"
 
 load "util"
