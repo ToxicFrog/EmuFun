@@ -16,12 +16,12 @@ load "filenotfound"
 
 function love.load()
     eprintf("Loading user settings: ")
-    love.filesystem.load("settings.lua")()
-    love.filesystem.write("settings.lua", love.filesystem.read("settings.lua"))
+    love.filesystem.load("emufun.cfg")()
+    love.filesystem.write("emufun.cfg", love.filesystem.read("emufun.cfg"))
     eprintf("done.\n")
     
     eprintf("Setup renderer: ")
-    -- if the user specified a resolution in settings.lua, we use that
+    -- if the user specified a resolution in emufun.cfg, we use that
     -- otherwise, we get a list of supported modes and use the highest-res one
     -- in this modern age of LCDs, this is usually the same resolution that
     -- the user's desktop is at, thus minimizing disruption
