@@ -166,3 +166,12 @@ function node:run()
     err[1].parent = self.parent
     return err
 end
+
+function node:draw()
+    if self.parent:selected() == self then
+        love.graphics.setColor(128, 255, 128)
+    else
+        love.graphics.setColor(255, 255, 255)
+    end
+    love.graphics.print(self.name, 0, 0)
+end
