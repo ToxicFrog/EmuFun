@@ -6,6 +6,8 @@ function Directory:__init(name, parent)
 	Node.__init(self, name, parent)
 
 	self.icon = emufun.images.directory
+
+	self:configure(self)
 end
 
 function Directory:type()
@@ -16,6 +18,28 @@ function Directory:run()
     -- "running" a directory just populates it and CDs into it
     self:populate()
     return self
+end
+
+-- load and apply the configuration file, if present
+function Directory:configure(node)
+	self:loadConfig()
+
+	if self.parent then
+		self.parent:configure(node)
+	end
+
+	setfenv(self.config, node)
+	self.config()
+end
+
+function Directory:loadConfig()
+	if self.config then return end
+	eprintf("Looking for configuration file for %s: ", self.name)
+
+	self.config = loadfile(self:path() .. "/.emufun")
+	eprintf("%s\n", tostring(self.config))
+
+	self.config = self.config or function() end
 end
 
 function Directory:populate(...)

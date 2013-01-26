@@ -1,7 +1,1 @@
---:mode=lua:
-
-local dir = (...)
-
-dir:add_command("add_command test", function(self)
-    print(self, _VERSION)
-end)
+displayname = (displayname or "") .. "Test Config File"
