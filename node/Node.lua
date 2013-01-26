@@ -174,6 +174,7 @@ function Node:run()
     
     -- return an error message
     local err = Node:new("ERROR", self.parent)
+    err.icon = emufun.images.error
     function err:populate() end
     err:add_command("Couldn't find configuration file!", function() end)
     err[1].parent = self.parent

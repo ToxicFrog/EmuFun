@@ -5,6 +5,7 @@ local Node = require "node.Node"
 -- use to quit or restart
 function emufun.filenotfound(reason)
     emufun.root = Node:new("ERROR")
+    emufun.root.icon = emufun.images.error
     
     local screen = emufun.root:add("Error: "..reason)
     function screen:populate() end
