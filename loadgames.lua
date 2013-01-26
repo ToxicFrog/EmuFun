@@ -11,7 +11,8 @@ function emufun.loadgames()
     end
     
     emufun.root:populate()
-    
+    emufun.root.displayname = "EmuFun Library"
+
     if not emufun.root[1] then
         -- we couldn't find anything in the gamedir!
         eprintf("failed!\n")

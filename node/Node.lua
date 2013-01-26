@@ -1,7 +1,8 @@
 local Node = require "Object" :clone()
 
 function Node:__init(name, parent)
-    self.name,self.parent = name,parent
+    self.name = name
+    self.parent = parent
     self.index = 1
     self.icon = emufun.images.unknown
 end
@@ -108,7 +109,7 @@ function Node:draw()
     end
 
     love.graphics.draw(self.icon, 0, 0)
-    love.graphics.print(self.name, 26, 0)
+    love.graphics.print(self.displayname or self.name, 26, 0)
 end
 
 return Node
