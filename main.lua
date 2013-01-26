@@ -42,12 +42,17 @@ function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setCaption("EmuFun")
     love.mouse.setVisible(false)
-
-    emufun.images = {}
-    emufun.images.directory = love.graphics.newImage("images/directory.png")
-    emufun.images.file = love.graphics.newImage("images/file.png")
-
     eprintf("done\n")
+
+    eprintf("Loading images...")
+    emufun.images = {}
+    for _,file in ipairs(love.filesystem.enumerate "images") do
+        if file:match("%.png$") then
+            eprintf(file .. " ")
+            emufun.images[file:sub(1,-5)] = love.graphics.newImage("images/" .. file)
+        end
+    end
+    eprintf("done.\n")
     
     return emufun.calibration()
 end

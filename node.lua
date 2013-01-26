@@ -34,7 +34,15 @@ function node:add_command(name, fn)
 end
 
 function node:sort()
-    table.sort(self, function(lhs, rhs) return lhs.name < rhs.name end)
+    table.sort(self, function(lhs, rhs)
+        -- directories go first
+        if lhs:type() ~= rhs:type() then
+            return lhs:type() == "directory"
+        else
+            -- otherwise go in name order
+            return lhs.name < rhs.name
+        end
+    end)
 end
 
 function node:path()
