@@ -42,6 +42,11 @@ function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setCaption("EmuFun")
     love.mouse.setVisible(false)
+
+    emufun.images = {}
+    emufun.images.directory = love.graphics.newImage("images/directory.png")
+    emufun.images.file = love.graphics.newImage("images/file.png")
+
     eprintf("done\n")
     
     return emufun.calibration()

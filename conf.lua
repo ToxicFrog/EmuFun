@@ -11,6 +11,7 @@ function love.conf(t)
     t.screen.fsaa = 0
 
     t.modules.graphics = true
+    t.modules.image = true      -- for loading the default filetype images
     t.modules.joystick = true
     t.modules.keyboard = true
     t.modules.event = true      -- or none of the event handlers work
@@ -18,7 +19,6 @@ function love.conf(t)
     t.modules.mouse = true      -- for mouse.setVisible
 
     t.modules.audio = false
-    t.modules.image = false
     t.modules.sound = false
     t.modules.physics = false
 end

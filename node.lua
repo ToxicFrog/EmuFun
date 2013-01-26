@@ -3,7 +3,15 @@ node = {}
 node.metatable = { __index = node }
 
 function node.new(name, parent)
-    return setmetatable({ name = name, parent = parent, index = 1 }, node.metatable)
+    local o = setmetatable({ name = name, parent = parent, index = 1 }, node.metatable)
+
+    if o:type() == "directory" then
+        o.icon = emufun.images.directory
+    else
+        o.icon = emufun.images.file
+    end
+
+    return o
 end
 
 function node:add(child)
@@ -173,5 +181,7 @@ function node:draw()
     else
         love.graphics.setColor(255, 255, 255)
     end
-    love.graphics.print(self.name, 0, 0)
+
+    love.graphics.draw(self.icon, 0, 0)
+    love.graphics.print(self.name, 26, 0)
 end
