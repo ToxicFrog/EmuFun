@@ -7,17 +7,7 @@ function emufun.loadgames()
         return emufun.filenotfound("Directory is missing or inaccessible")
     end
     
-    -- we use a filter here that excludes files, so that you can - for example
-    -- keep emufun.love in the same root directory your media categories are
-    -- in.
-    local function filter_type(path, item)
-        return lfs.attributes(path, "mode") == "directory"
-    end
-    
-    emufun.root:populate(filter_type)
-    for sys in emufun.root:children() do
-        sys:populate()
-    end
+    emufun.root:populate()
     
     if not emufun.root[1] then
         -- we couldn't find anything in the gamedir!

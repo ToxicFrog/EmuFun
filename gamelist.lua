@@ -3,10 +3,8 @@ local system
 function emufun.gamelist()
     local W,H = love.graphics.getWidth(),love.graphics.getHeight()
     
-    system = emufun.root[1]
-    for sys in emufun.root:children() do
-        sys.dir = sys
-    end
+    system = emufun.root
+    system.dir = system
 
     function love.draw()
         local lg = love.graphics
@@ -51,12 +49,14 @@ function emufun.next_game()
 end
 
 function emufun.prev_system()
+    do return end
     emufun.root:prev()
     system = emufun.root[emufun.root.index]
     system:populate()
 end
 
 function emufun.next_system()
+    do return end
     emufun.root:next()
     system = emufun.root[emufun.root.index]
     system.dir:populate()
