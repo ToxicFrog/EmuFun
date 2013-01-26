@@ -68,27 +68,21 @@ function Node:children()
     end)
 end
 
-function Node:find_config()
-    local function exists(path)
-        return lfs.attributes(path, "mode") == "file"
+-- load and apply the configuration
+function Node:configure(node)
+    -- inherit parent's configuration
+    if self.parent then
+        self.parent:configure(node)
     end
-    
-    -- check to see if .config.$ROM exists
-    if exists(self.parent:path().."/"..emufun.CONFIG..self.name) then
-        return self.parent:path().."/"..emufun.CONFIG..self.name
-    end
-    
-    -- if not, work our way up the directory tree looking for a ".config" file
-    -- in each directory
-    while self.parent do
-        self = self.parent
-        if exists(self:path().."/"..emufun.CONFIG) then
-            return self:path().."/"..emufun.CONFIG
-        end
-    end
-    
-    return nil
+
+    -- apply on-disk configuration, if present
+    setfenv(self.config, node)
+    self.config()
 end
+
+-- default configuration function is a stub
+-- subclasses may load a replacement from disk
+Node.config = function() end
 
 function Node:run()
     -- return an error message
@@ -99,7 +93,6 @@ function Node:run()
     err[1].parent = self.parent
     return err
 end
-
 
 function Node:draw()
     if self.parent and self.parent:selected() == self then

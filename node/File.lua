@@ -12,17 +12,10 @@ function File:type()
 end
 
 function File:run()
-    -- if the game starts with "--!emufun", it's an emufun script and should
-    -- be loaded and run directly
-    if io.readn(self:path(), 9) == "--!emufun" then
-        pcall(loadfile(self:path()), self)
-        return self.parent
-    end
-    
-    -- running a game executes it with emufun.launch and returns its containing
-    -- directory
-    if self:find_config() then
-        emufun.launch(emufun.root:path(), self:path(), self:find_config())
+    -- the configuration file should define a command to execute
+    -- if not, we fall through to the error
+    if self.command then
+        eprintf("STUB: %s %s\n", tostring(self:path()), tostring(self.command))
         return self.parent
     end
     
