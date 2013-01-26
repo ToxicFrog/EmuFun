@@ -1,10 +1,21 @@
 local Node = require "node.Node"
+local File = require "node.File"
 local Directory = Node:clone()
 
 function Directory:__init(name, parent)
 	Node.__init(self, name, parent)
 
 	self.icon = emufun.images.directory
+end
+
+function Directory:type()
+	return "directory"
+end
+
+function Directory:run()
+    -- "running" a directory just populates it and CDs into it
+    self:populate()
+    return self
 end
 
 function Directory:populate(...)
@@ -54,7 +65,7 @@ function Directory:populate(...)
             	if lfs.attributes(itempath, "mode") == "directory" then
             		self:add(Directory:new(item, self))
             	else
-	                self:add(Node:new(item, self))
+	                self:add(File:new(item, self))
 	            end
             end
         end

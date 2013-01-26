@@ -90,34 +90,15 @@ function Node:find_config()
 end
 
 function Node:run()
-    -- "running" a directory just populates it and CDs into it
-    if self:type() == "directory" then
-        self:populate()
-        return self
-    end
-    
-    -- if the game starts with "--!emufun", it's an emufun script and should
-    -- be loaded and run directly
-    if io.readn(self:path(), 9) == "--!emufun" then
-        pcall(loadfile(self:path()), self)
-        return self.parent
-    end
-    
-    -- running a game executes it with emufun.launch and returns its containing
-    -- directory
-    if self:find_config() then
-        emufun.launch(emufun.root:path(), self:path(), self:find_config())
-        return self.parent
-    end
-    
     -- return an error message
     local err = Node:new("ERROR", self.parent)
     err.icon = emufun.images.error
     function err:populate() end
-    err:add_command("Couldn't find configuration file!", function() end)
+    err:add_command("This node doesn't support activation. Report this as a bug.", function() end)
     err[1].parent = self.parent
     return err
 end
+
 
 function Node:draw()
     if self.parent and self.parent:selected() == self then
