@@ -2,7 +2,7 @@
 -- whatever reason. It sets up a fake gamedir in memory which the user can
 -- use to quit or restart
 function emufun.filenotfound(reason)
-    emufun.root = node:new("DUMMY")
+    emufun.root = node:new("ERROR")
     
     local screen = emufun.root:add("Error: "..reason)
     function screen:populate() end

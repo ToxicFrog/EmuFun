@@ -8,7 +8,7 @@ require "lfs"
 
 load "util"
 load "input"
-load "node"
+node = load "node"
 load "calibration"
 load "loadgames"
 load "gamelist"
@@ -53,7 +53,7 @@ function love.load()
         end
     end
     eprintf("done.\n")
-    
+
     return emufun.calibration()
 end
 

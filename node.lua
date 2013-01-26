@@ -1,22 +1,19 @@
-node = {}
+local node = require "Object" :clone()
 
-node.metatable = { __index = node }
+function node:__init(name, parent)
+    self.name,self.parent = name,parent
+    self.index = 1
 
-function node.new(name, parent)
-    local o = setmetatable({ name = name, parent = parent, index = 1 }, node.metatable)
-
-    if o:type() == "directory" then
-        o.icon = emufun.images.directory
+    if self:type() == "directory" then
+        self.icon = emufun.images.directory
     else
-        o.icon = emufun.images.file
+        self.icon = emufun.images.file
     end
-
-    return o
 end
 
 function node:add(child)
     if type(child) == "string" then
-        return self:add(node.new(child, self))
+        return self:add(node:new(child, self))
     end
     
     table.insert(self, child)
@@ -24,7 +21,7 @@ function node:add(child)
 end
 
 function node:add_command(name, fn)
-    local child = node.new(name, self)
+    local child = node:new(name, self)
     
     function child:run()
         return fn(child) or child.parent
@@ -176,7 +173,7 @@ function node:run()
     end
     
     -- return an error message
-    local err = node.new("ERROR", self.parent)
+    local err = node:new("ERROR", self.parent)
     function err:populate() end
     err:add_command("Couldn't find configuration file!", function() end)
     err[1].parent = self.parent
@@ -193,3 +190,5 @@ function node:draw()
     love.graphics.draw(self.icon, 0, 0)
     love.graphics.print(self.name, 26, 0)
 end
+
+return node
