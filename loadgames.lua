@@ -1,8 +1,9 @@
 local Node = require "node.Node"
+local Directory = require "node.Directory"
 
 function emufun.loadgames()
     eprintf("Reading game library: ")
-    emufun.root = Node:new(arg[2] or os.getenv("GAMEDIR") or emufun.GAMEDIR)
+    emufun.root = Directory:new(arg[2] or os.getenv("GAMEDIR") or emufun.GAMEDIR)
     if not emufun.root:type() then
         -- can't find game directory, oops
         eprintf("failed!\n")
