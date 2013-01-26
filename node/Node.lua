@@ -181,7 +181,7 @@ function Node:run()
 end
 
 function Node:draw()
-    if self.parent:selected() == self then
+    if self.parent and self.parent:selected() == self then
         love.graphics.setColor(128, 255, 128)
     else
         love.graphics.setColor(255, 255, 255)

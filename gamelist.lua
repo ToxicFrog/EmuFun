@@ -12,8 +12,6 @@ function emufun.gamelist()
         lg.setColor(255, 255, 255)
         
         -- decorations at top
-        lg.triangle("fill", 4, 12, 20, 2, 20, 22) 
-        lg.triangle("fill", W-4, 12, W-20, 2, W-20, 22) 
         lg.rectangle("fill", 0, 25, W, 2)
         
         -- decorations at middle
@@ -21,9 +19,7 @@ function emufun.gamelist()
         lg.triangle("fill", W-4, H/2-20, W-4, H/2, W-20, H/2-10)
         
         -- print system name at top
-        clip(24, 0, W-48, 24)
-        lg.printf(node.name, 0, 0, W, "center")
-        clip()
+        node:draw()
         
         -- print list of ROMs
         clip(24, 26, W-48, H)
