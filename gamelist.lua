@@ -1,10 +1,9 @@
-local system
+local node
 
 function emufun.gamelist()
     local W,H = love.graphics.getWidth(),love.graphics.getHeight()
     
-    system = emufun.root
-    system.dir = system
+    node = emufun.root
 
     function love.draw()
         local lg = love.graphics
@@ -23,16 +22,16 @@ function emufun.gamelist()
         
         -- print system name at top
         clip(24, 0, W-48, 24)
-        lg.printf(system.name, 0, 0, W, "center")
+        lg.printf(node.name, 0, 0, W, "center")
         clip()
         
         -- print list of ROMs
         clip(24, 26, W-48, H)
 
-        for i=1,#system.dir do
+        for i=1,#node do
             lg.push()
-            lg.translate(24, H/2-22 + (i - system.dir.index) * 28)
-            system.dir[i]:draw()
+            lg.translate(24, H/2-22 + (i - node.index) * 28)
+            node[i]:draw()
             lg.pop()
         end
         
@@ -41,31 +40,25 @@ function emufun.gamelist()
 end
 
 function emufun.prev_game()
-    system.dir:prev()
+    node:prev()
 end
 
 function emufun.next_game()
-    system.dir:next()
+    node:next()
 end
 
 function emufun.prev_system()
-    do return end
-    emufun.root:prev()
-    system = emufun.root[emufun.root.index]
-    system:populate()
+    return emufun.up()
 end
 
 function emufun.next_system()
-    do return end
-    emufun.root:next()
-    system = emufun.root[emufun.root.index]
-    system.dir:populate()
+    return emufun.down()
 end
 
 function emufun.up()
-    if system.dir ~= system then
-        system.dir = system.dir.parent
-        system.dir:populate()
+    if node.parent then
+        node = node.parent
+        node:populate()
     end
 end
 
@@ -73,6 +66,6 @@ end
 -- if it's a directory, we should scan it if necessary, then cd into it
 -- if it's a file, we should find its associated .config and then launch it
 function emufun.down()
-    system.dir = system.dir:selected():run()
-    system.dir:populate()
+    node = node:selected():run()
+    node:populate()
 end
