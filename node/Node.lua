@@ -1,6 +1,6 @@
-local node = require "Object" :clone()
+local Node = require "Object" :clone()
 
-function node:__init(name, parent)
+function Node:__init(name, parent)
     self.name,self.parent = name,parent
     self.index = 1
 
@@ -11,17 +11,17 @@ function node:__init(name, parent)
     end
 end
 
-function node:add(child)
+function Node:add(child)
     if type(child) == "string" then
-        return self:add(node:new(child, self))
+        return self:add(Node:new(child, self))
     end
     
     table.insert(self, child)
     return child
 end
 
-function node:add_command(name, fn)
-    local child = node:new(name, self)
+function Node:add_command(name, fn)
+    local child = Node:new(name, self)
     
     function child:run()
         return fn(child) or child.parent
@@ -30,7 +30,7 @@ function node:add_command(name, fn)
     self:add(child)
 end
 
-function node:sort()
+function Node:sort()
     table.sort(self, function(lhs, rhs)
         -- directories go first
         if lhs:type() ~= rhs:type() then
@@ -42,7 +42,7 @@ function node:sort()
     end)
 end
 
-function node:path()
+function Node:path()
     if self.parent then
         return self.parent:path().."/"..self.name
     else
@@ -50,23 +50,23 @@ function node:path()
     end
 end
 
-function node:prev()
+function Node:prev()
     self.index = (self.index - 2) % #self + 1
 end
 
-function node:next()
+function Node:next()
     self.index = self.index % #self + 1
 end
 
-function node:type()
+function Node:type()
     return lfs.attributes(self:path(), "mode")
 end
 
-function node:selected()
+function Node:selected()
     return self[self.index]
 end
 
-function node:populate(...)
+function Node:populate(...)
     -- skip dotfiles
     local function dotfile(path, item)
         return not item:match("^%.")
@@ -123,13 +123,13 @@ function node:populate(...)
     end
 end
 
-function node:children()
+function Node:children()
     return coroutine.wrap(function()
         for _,child in ipairs(self) do coroutine.yield(child) end
     end)
 end
 
-function node:find_config()
+function Node:find_config()
     local function exists(path)
         return lfs.attributes(path, "mode") == "file"
     end
@@ -151,7 +151,7 @@ function node:find_config()
     return nil
 end
 
-function node:run()
+function Node:run()
     -- "running" a directory just populates it and CDs into it
     if self:type() == "directory" then
         self:populate()
@@ -173,14 +173,14 @@ function node:run()
     end
     
     -- return an error message
-    local err = node:new("ERROR", self.parent)
+    local err = Node:new("ERROR", self.parent)
     function err:populate() end
     err:add_command("Couldn't find configuration file!", function() end)
     err[1].parent = self.parent
     return err
 end
 
-function node:draw()
+function Node:draw()
     if self.parent:selected() == self then
         love.graphics.setColor(128, 255, 128)
     else
@@ -191,4 +191,4 @@ function node:draw()
     love.graphics.print(self.name, 26, 0)
 end
 
-return node
+return Node

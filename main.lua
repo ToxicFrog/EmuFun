@@ -8,7 +8,6 @@ require "lfs"
 
 load "util"
 load "input"
-node = load "node"
 load "calibration"
 load "loadgames"
 load "gamelist"
