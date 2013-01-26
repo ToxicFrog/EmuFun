@@ -20,12 +20,12 @@ function emufun.calibration()
             return event
         end
         
-        love.set_repeat(command("up", emufun.prev_game), 0.5, 0.1)
-        love.set_repeat(command("down", emufun.next_game), 0.5, 0.1)
-        command("left", emufun.prev_system)
-        command("right", emufun.next_system)
-        command("ok", emufun.down)
-        command("cancel", emufun.up)
+        love.set_repeat(command("up", emufun.list_prev), 0.5, 0.1)
+        love.set_repeat(command("down", emufun.list_next), 0.5, 0.1)
+        command("left", emufun.list_contract)
+        command("right", emufun.list_expand)
+        --command("ok", emufun.list_expand)
+        --command("cancel", emufun.list_contract)
         
         table.copy(controls, input)
         

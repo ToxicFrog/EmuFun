@@ -39,23 +39,15 @@ function emufun.gamelist()
     end
 end
 
-function emufun.prev_game()
+function emufun.list_prev()
     node:prev()
 end
 
-function emufun.next_game()
+function emufun.list_next()
     node:next()
 end
 
-function emufun.prev_system()
-    return emufun.up()
-end
-
-function emufun.next_system()
-    return emufun.down()
-end
-
-function emufun.up()
+function emufun.list_contract()
     if node.parent then
         node = node.parent
         node:populate()
@@ -65,7 +57,7 @@ end
 -- the user has selected an entry in the list
 -- if it's a directory, we should scan it if necessary, then cd into it
 -- if it's a file, we should find its associated .config and then launch it
-function emufun.down()
+function emufun.list_expand()
     node = node:selected():run()
     node:populate()
 end
