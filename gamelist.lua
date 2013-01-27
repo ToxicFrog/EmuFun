@@ -1,9 +1,21 @@
-local node
+local nodes = {}
+
+local function push(node)
+    table.insert(nodes, node)
+end
+
+local function pop()
+    table.remove(nodes)
+end
+
+local function peek()
+    return nodes[#nodes]
+end
 
 function emufun.gamelist()
     local W,H = love.graphics.getWidth(),love.graphics.getHeight()
     
-    node = emufun.root
+    push(emufun.root)
 
     function love.draw()
         local lg = love.graphics
@@ -19,15 +31,15 @@ function emufun.gamelist()
         lg.triangle("fill", W-4, H/2-20, W-4, H/2, W-20, H/2-10)
         
         -- print system name at top
-        node:draw()
+        peek():draw()
         
         -- print list of ROMs
         clip(24, 26, W-48, H)
 
-        for i=1,#node do
+        for i=1,#peek() do
             lg.push()
-            lg.translate(24, H/2-22 + (i - node.index) * 28)
-            node[i]:draw()
+            lg.translate(24, H/2-22 + (i - peek().index) * 28)
+            peek()[i]:draw()
             lg.pop()
         end
         
@@ -36,17 +48,17 @@ function emufun.gamelist()
 end
 
 function emufun.list_prev()
-    node:prev()
+    peek():prev()
 end
 
 function emufun.list_next()
-    node:next()
+    peek():next()
 end
 
 function emufun.list_contract()
-    if node.parent then
-        node = node.parent
-        node:populate()
+    if peek().parent then
+        pop()
+        peek():populate()
     end
 end
 
@@ -54,6 +66,6 @@ end
 -- if it's a directory, we should scan it if necessary, then cd into it
 -- if it's a file, we should find its associated .config and then launch it
 function emufun.list_expand()
-    node = node:selected():run()
-    node:populate()
+    push(peek():selected():run())
+    peek():populate()
 end
