@@ -1,5 +1,7 @@
 local Node = require "Object" :clone()
 
+Node.emufun = emufun
+
 function Node:__init(name, parent)
     self.name = name
     self.parent = parent
@@ -68,6 +70,10 @@ function Node:children()
     end)
 end
 
+-- default configuration function is a stub
+-- subclasses may load a replacement from disk
+Node.config = function() end
+
 -- load and apply the configuration
 function Node:configure(node)
     -- inherit parent's configuration
@@ -79,10 +85,6 @@ function Node:configure(node)
     setfenv(self.config, node)
     self.config()
 end
-
--- default configuration function is a stub
--- subclasses may load a replacement from disk
-Node.config = function() end
 
 function Node:run()
     -- return an error message
