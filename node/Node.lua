@@ -88,12 +88,7 @@ end
 
 function Node:run()
     -- return an error message
-    local err = Node:new("ERROR", self.parent)
-    err.icon = emufun.images.error
-    function err:populate() end
-    err:add_command("This node doesn't support activation. Report this as a bug.", function() end)
-    err[1].parent = self.parent
-    return err
+    return new "node.Message" ("Error!", "This node doesn't support activation. Report this as a bug.", self.parent)
 end
 
 function Node:draw()
@@ -106,5 +101,7 @@ function Node:draw()
     love.graphics.draw(self.icon, 0, 0)
     love.graphics.print(self.displayname or self.name, 26, 0)
 end
+
+function Node:populate() end
 
 return Node

@@ -37,23 +37,16 @@ function Directory:populate(...)
     for item in lfs.dir(self:path()) do
         local itempath = self:path().."/"..item
         
-        -- ".emufun" files get loaded and run
-        -- FIXME: log errors to file
-        if item == ".emufun" then
-            pcall(loadfile(self:path().."/.emufun"), self)
-        
+        -- create a node for it
+        local node
+        if lfs.attributes(itempath, "mode") == "directory" then
+            node = Directory:new(item, self)
         else
-            -- create a node for it
-            local node
-            if lfs.attributes(itempath, "mode") == "directory" then
-                node = Directory:new(item, self)
-            else
-                node = File:new(item, self)
-            end
+            node = File:new(item, self)
+        end
 
-            if not node.hidden then
-                self:add(node)
-            end
+        if not node.hidden then
+            self:add(node)
         end
     end
     

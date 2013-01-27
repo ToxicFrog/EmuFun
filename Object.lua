@@ -19,4 +19,12 @@ function Object:clone()
 	return child
 end
 
+-- global object creator
+function new(class)
+	class = require(class)
+	return function(...)
+		return class:new(...)
+	end
+end
+
 return Object
