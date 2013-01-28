@@ -14,7 +14,9 @@ function View:__init(icon, title, ...)
 
 	for _,node in ipairs {...} do
 		for child in node:children() do
-			table.insert(self.list, child)
+			if not child.hidden then
+				table.insert(self.list, child)
+			end
 		end
 	end
 end
