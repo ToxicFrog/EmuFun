@@ -21,7 +21,7 @@ function Directory:run()
     self:populate()
 
     if #self == 0 then
-        return new "node.Message" (self.name, self.parent, "Directory is empty!")
+        return new "node.Message" (self.name, "Directory is empty!", self.parent)
     end
 
     return self
