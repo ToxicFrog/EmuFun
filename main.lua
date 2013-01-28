@@ -11,7 +11,6 @@ load "input"
 load "calibration"
 load "loadgames"
 load "gamelist"
-load "filenotfound"
 
 function love.load()
     eprintf("Loading user settings: ")
