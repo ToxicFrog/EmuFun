@@ -37,5 +37,12 @@ end
 -- if it's a directory, we should scan it if necessary, then cd into it
 -- if it's a file, we should find its associated .config and then launch it
 function emufun.list_expand()
-    push(view.list[view.index]:run())
+    local next = view:selected():run()
+    if type(next) == "number" then
+        for i=1,next do
+            emufun.list_contract()
+        end
+    else
+        push(next)
+    end
 end

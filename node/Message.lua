@@ -6,7 +6,7 @@ function Message:__init(name, message, parent)
 
     self.icon = emufun.images.error
 
-    self:add_command(message, function() return parent end)
+    self:add_command(message, function() return 1 end)
 end
 
 return Message

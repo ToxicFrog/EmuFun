@@ -68,4 +68,8 @@ function View:next()
     self.index = self.index % #self.list + 1
 end
 
+function View:selected()
+	return self.list[self.index]
+end
+
 return View
