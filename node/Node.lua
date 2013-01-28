@@ -5,7 +5,6 @@ Node.emufun = emufun
 function Node:__init(name, parent)
     self.name = name
     self.parent = parent
-    self.index = 1
     self.icon = emufun.images.unknown
 end
 
@@ -48,20 +47,8 @@ function Node:path()
     end
 end
 
-function Node:prev()
-    self.index = (self.index - 2) % #self + 1
-end
-
-function Node:next()
-    self.index = self.index % #self + 1
-end
-
 function Node:type()
     return lfs.attributes(self:path(), "mode")
-end
-
-function Node:selected()
-    return self[self.index]
 end
 
 function Node:children()
@@ -92,12 +79,6 @@ function Node:run()
 end
 
 function Node:draw()
-    if self.parent and self.parent:selected() == self then
-        love.graphics.setColor(128, 255, 128)
-    else
-        love.graphics.setColor(255, 255, 255)
-    end
-
     love.graphics.draw(self.icon, 0, 0)
     love.graphics.print(self.displayname or self.name, 26, 0)
 end

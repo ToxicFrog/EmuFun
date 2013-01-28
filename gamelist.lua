@@ -1,64 +1,35 @@
-local nodes = {}
+local views = {}
+local view
 
-local function push(node)
-    table.insert(nodes, node)
+local function push(node, icon, title)
+    table.insert(views, new "View" (icon or node.icon, title or node.name, node))
+    view = views[#views]
 end
 
 local function pop()
-    table.remove(nodes)
-end
-
-local function peek()
-    return nodes[#nodes]
+    table.remove(views)
+    view = views[#views]
 end
 
 function emufun.gamelist()
-    local W,H = love.graphics.getWidth(),love.graphics.getHeight()
-    
-    push(emufun.root)
+    push(emufun.root, nil, "Media Library")
 
     function love.draw()
-        local lg = love.graphics
-        local clip = lg.setScissor
-
-        lg.setColor(255, 255, 255)
-        
-        -- decorations at top
-        lg.rectangle("fill", 0, 25, W, 2)
-        
-        -- decorations at middle
-        lg.triangle("fill", 4, H/2-20, 4, H/2, 20, H/2-10)
-        lg.triangle("fill", W-4, H/2-20, W-4, H/2, W-20, H/2-10)
-        
-        -- print system name at top
-        peek():draw()
-        
-        -- print list of ROMs
-        clip(24, 26, W-48, H)
-
-        for i=1,#peek() do
-            lg.push()
-            lg.translate(24, H/2-22 + (i - peek().index) * 28)
-            peek()[i]:draw()
-            lg.pop()
-        end
-        
-        clip()
+        view:draw()
     end
 end
 
 function emufun.list_prev()
-    peek():prev()
+    view:prev()
 end
 
 function emufun.list_next()
-    peek():next()
+    view:next()
 end
 
 function emufun.list_contract()
-    if peek().parent then
+    if #views > 1 then
         pop()
-        peek():populate()
     end
 end
 
@@ -66,6 +37,5 @@ end
 -- if it's a directory, we should scan it if necessary, then cd into it
 -- if it's a file, we should find its associated .config and then launch it
 function emufun.list_expand()
-    push(peek():selected():run())
-    peek():populate()
+    push(view.list[view.index]:run())
 end

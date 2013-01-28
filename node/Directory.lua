@@ -51,11 +51,6 @@ function Directory:populate(...)
     end
     
     self:sort()
-    
-    -- bring index within bounds
-    if self.index > #self then
-        self.index = 1
-    end
 end
 
 return Directory
