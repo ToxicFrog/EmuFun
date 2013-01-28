@@ -1,8 +1,8 @@
 local views = {}
 local view
 
-local function push(node, icon, title)
-    table.insert(views, new "View" (icon or node.icon, title or node.name, node))
+local function push(icon, title, node, ...)
+    table.insert(views, new "View" (icon or node.icon, title or node.name, node, ...))
     view = views[#views]
 end
 
@@ -12,7 +12,7 @@ local function pop()
 end
 
 function emufun.gamelist()
-    push(emufun.root, nil, "Media Library")
+    push(nil, "Media Library", emufun.root)
 
     function love.draw()
         view:draw()
@@ -43,6 +43,6 @@ function emufun.list_expand()
             emufun.list_contract()
         end
     else
-        push(next)
+        push(nil, nil, next)
     end
 end
