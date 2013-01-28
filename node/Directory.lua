@@ -19,6 +19,11 @@ end
 function Directory:run()
     -- "running" a directory just populates it and CDs into it
     self:populate()
+
+    if #self == 0 then
+        return new "node.Message" (self.name, self.parent, "Directory is empty!")
+    end
+
     return self
 end
 
