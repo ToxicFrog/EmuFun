@@ -1,1 +1,2 @@
+do return end
 displayname = (displayname or "") .. "Test Config File"
