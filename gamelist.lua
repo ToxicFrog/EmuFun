@@ -12,7 +12,7 @@ local function pop()
 end
 
 function emufun.gamelist()
-    push(nil, "Media Library", emufun.library[1])
+    push(nil, "Media Library", unpack(emufun.library))
 
     function love.draw()
         view:draw()

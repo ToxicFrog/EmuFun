@@ -15,19 +15,19 @@ function emufun.loadgames()
     eprintf("Reading game library: ")
     emufun.library = {}
 
-    local lib = Directory:new(arg[2] or os.getenv("GAMEDIR") or emufun.config.library_path)
-    lib:populate()
-    lib.displayname = "EmuFun Library"
+    for _,path in ipairs(emufun.config.library_paths) do
+        local lib = Directory:new(path)
+        lib:populate()
 
-    if not lib[1] then
-        -- we couldn't find anything in the gamedir!
-        eprintf("failed!\n")
-
-        lib = liberror("Media library is empty!")
+        if lib[1] then
+            table.insert(emufun.library, lib)
+        end
     end
-    eprintf("done\n")
-
-    table.insert(emufun.library, lib)
     
+    if #emufun.library == 0 then
+        table.insert(emufun.library, liberror("Media library is empty!"))
+    end
+    eprintf("done.")
+
     return emufun.gamelist()
 end
