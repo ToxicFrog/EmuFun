@@ -91,21 +91,20 @@ end
 
 -- same as above, but for joysticks. Joystick events are parameterized by both
 -- stick and button; button 3 on stick 0 shows up as joy_0_button_3.
-function love.joystickpressed(joystick, button)
-    local name = "joy_"..joystick.."_button_"..button
-    
-    start_timer(name)
-    return event(name, joystick, "button", button)
-    or event("joy_" .. joystick .. "_button_any", joystick, "button", button)
-    or event("joy_any_button_" .. button, joystick, "button", button)
-    or event("joy_any_button_any", joystick, "button", button)
-    or event("joy_any", joystick, "button", button, joystick, "button", button)
+function love.joystickpressed(j, b)
+    return event("joy_"..j.."_button_"..b, j, "button", b)
+    or event("joy_"..j.."_button_any", j, "button", b)
+    or event("joy_any_button_"..b, j, "button", b)
+    or event("joy_any_button_any", j, "button", b)
+    or event("joy_any", j, "button", b)
 end
 
 function love.joystickreleased(joystick, button)
-    local name = "joy_"..joystick.."_button_"..button
-    
-    stop_timer(name)
+    return event("!joy_"..j.."_button_"..b, j, "button", b)
+    or event("!joy_"..j.."_button_any", j, "button", b)
+    or event("!joy_any_button_"..b, j, "button", b)
+    or event("!joy_any_button_any", j, "button", b)
+    or event("!joy_any", j, "button", b)
 end
 
 -- joystick axis handling. At initialization, read the state of every axis on
