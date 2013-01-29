@@ -19,6 +19,9 @@ function emufun.gamelist()
     input.bind("left", emufun.list_contract)
     input.bind("right", emufun.list_expand)
 
+    input.setRepeat("up", 0.5, 0.1)
+    input.setRepeat("down", 0.5, 0.1)
+
     function love.draw()
         view:draw()
     end

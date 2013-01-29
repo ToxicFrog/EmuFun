@@ -5,31 +5,14 @@
 -- else is "center".
 input = {}
 
+-- event bindings
+local bindings = {}
+
 -- timers used for key-repeat settings
 local timers = {}
 
--- Dispatch an event with the given names and arguments.
--- Returns true if an event handler existed, false otherwise
-local function event(name, ...)
-    if input[name] then
-        input[name](...)
-        return true
-    end
-    return false
-end
-
-function input.bind(from, to)
-    if type(to) == "string" then
-        input[from] = function(...)
-            return event(to, ...)
-        end
-    else
-        input[from] = to
-    end
-end
-
 local function start_timer(name)
-    if timers[name] then
+    if timers[name] and not timers[name].t then
         timers[name].t = timers[name].delay
     end
 end
@@ -40,28 +23,67 @@ local function stop_timer(name)
     end
 end
 
+-- Dispatch an event with the given names and arguments.
+-- Returns true if an event handler existed, false otherwise
+local function event(name, ...)
+    if name:sub(1,1) == "!" then
+        stop_timer(name:sub(2))
+    else
+        start_timer(name)
+    end
+    if bindings[name] then
+        bindings[name](...)
+        return true
+    end
+    return false
+end
+
+function input.bind(from, to, up)
+    if type(to) == "string" then
+        bindings[from] = function(...)
+            return event(to, ...)
+        end
+        bindings["!"..from] = function(...)
+            return event(up or "!"..to, ...)
+        end
+    else
+        bindings[from] = to
+        bindings["!" .. from] = up
+    end
+end
+
+function input.unbind(from)
+    bindings[from] = nil
+end
+
+function input.unbindall()
+    bindings = {}
+end
+
 -- enable key repeat for the given event
 -- delay the amount of time to wait until it starts repeating, period is how
 -- frequently to emit the repeated events.
 -- eg: love.set_repeat("key_a", 1.0, 0.5)
-function love.set_repeat(event, delay, period)
+function input.setRepeat(event, delay, period)
     if delay then
+        local t
         timers[event] = { delay = delay, period = period }
     else
         timers[event] = nil
+        timers["!"..event] = nil
     end
 end
 
 -- love2d callback function for keyboard events. Pressing 'a' will trigger event
 -- key_a() or, if that doesn't exist, key_any('a')
 function love.keypressed(name, num)
-    start_timer("key_"..name)
     return event("key_"..name)
     or event("key_any", name)
 end
 
 function love.keyreleased(name, num)
-    stop_timer("key_"..name)
+    return event("!key_"..name)
+    or event("!key_any")
 end
 
 -- same as above, but for joysticks. Joystick events are parameterized by both
