@@ -26,8 +26,8 @@ local function contract()
 end
 
 -- the user has selected an entry in the list
--- if it's a directory, we should scan it if necessary, then cd into it
--- if it's a file, we should find its associated .config and then launch it
+-- the corresponding node's :run() method will return the target node,
+-- or a number N indicating "go back N levels"
 local function expand()
     local next = view:selected():run()
     if type(next) == "number" then
