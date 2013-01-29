@@ -52,8 +52,11 @@ function input.bind(from, to, up)
     end
 end
 
-function input.unbind(from)
+function input.unbind(from, rest, ...)
     bindings[from] = nil
+    if rest then
+        return input.unbind(rest, ...)
+    end
 end
 
 function input.unbindall()
