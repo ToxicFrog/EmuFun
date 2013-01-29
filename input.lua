@@ -81,30 +81,20 @@ end
 -- key_a() or, if that doesn't exist, key_any('a')
 function love.keypressed(name, num)
     return event("key_"..name)
-    or event("key_any", name)
 end
 
 function love.keyreleased(name, num)
     return event("!key_"..name)
-    or event("!key_any")
 end
 
 -- same as above, but for joysticks. Joystick events are parameterized by both
 -- stick and button; button 3 on stick 0 shows up as joy_0_button_3.
 function love.joystickpressed(j, b)
     return event("joy_"..j.."_button_"..b, j, "button", b)
-    or event("joy_"..j.."_button_any", j, "button", b)
-    or event("joy_any_button_"..b, j, "button", b)
-    or event("joy_any_button_any", j, "button", b)
-    or event("joy_any", j, "button", b)
 end
 
 function love.joystickreleased(joystick, button)
     return event("!joy_"..j.."_button_"..b, j, "button", b)
-    or event("!joy_"..j.."_button_any", j, "button", b)
-    or event("!joy_any_button_"..b, j, "button", b)
-    or event("!joy_any_button_any", j, "button", b)
-    or event("!joy_any", j, "button", b)
 end
 
 -- joystick axis handling. At initialization, read the state of every axis on
