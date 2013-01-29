@@ -1,6 +1,8 @@
 local co = coroutine
 
 function emufun.calibration()
+    do return emufun.loadgames() end
+    
     local W,H = love.graphics.getWidth(),love.graphics.getHeight()
     local message = "?"
     local controls = {}

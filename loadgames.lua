@@ -27,7 +27,7 @@ function emufun.loadgames()
     if #emufun.library == 0 then
         table.insert(emufun.library, liberror("Media library is empty!"))
     end
-    eprintf("done.")
+    eprintf("done.\n")
 
     return emufun.gamelist()
 end

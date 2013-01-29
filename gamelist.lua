@@ -14,6 +14,11 @@ end
 function emufun.gamelist()
     push(nil, "Media Library", unpack(emufun.library))
 
+    input.bind("up", emufun.list_prev)
+    input.bind("down", emufun.list_next)
+    input.bind("left", emufun.list_contract)
+    input.bind("right", emufun.list_expand)
+
     function love.draw()
         view:draw()
     end

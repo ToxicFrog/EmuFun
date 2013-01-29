@@ -1,4 +1,4 @@
-emufun = { config = {} }
+emufun = {}
 
 function load(module)
     return assert(love.filesystem.load(module..".lua"))()
@@ -14,10 +14,7 @@ load "gamelist"
 
 function love.load()
     eprintf("Loading user settings: ")
-    love.filesystem.write("emufun.cfg", love.filesystem.read("emufun.cfg"))
-    local config = love.filesystem.load("emufun.cfg")
-    setfenv(config, emufun.config)
-    config()
+    load "settings"
     eprintf("done.\n")
     
     eprintf("Setup renderer: ")

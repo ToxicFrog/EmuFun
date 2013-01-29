@@ -18,6 +18,16 @@ local function event(name, ...)
     return false
 end
 
+function input.bind(from, to)
+    if type(to) == "string" then
+        input[from] = function(...)
+            return event(to, ...)
+        end
+    else
+        input[from] = to
+    end
+end
+
 local function start_timer(name)
     if timers[name] then
         timers[name].t = timers[name].delay
@@ -60,8 +70,11 @@ function love.joystickpressed(joystick, button)
     local name = "joy_"..joystick.."_button_"..button
     
     start_timer(name)
-    return event(name)
-    or event("joy_any", joystick, "button", button)
+    return event(name, joystick, "button", button)
+    or event("joy_" .. joystick .. "_button_any", joystick, "button", button)
+    or event("joy_any_button_" .. button, joystick, "button", button)
+    or event("joy_any_button_any", joystick, "button", button)
+    or event("joy_any", joystick, "button", button, joystick, "button", button)
 end
 
 function love.joystickreleased(joystick, button)
@@ -108,7 +121,10 @@ function love.update(dt)
             stop_timer("joy_"..joy.."_hat_"..old_axes.hat)
             start_timer("joy_"..joy.."_hat_"..value)
             
-            return event("joy_"..joy.."_hat_"..value)
+            return event("joy_"..joy.."_hat_"..value, joy, "hat", value)
+            or event("joy_" .. joystick .. "_hat_any", joy, "hat", value)
+            or event("joy_any_hat_" .. value, joy, "hat", value)
+            or event("joy_any_hat_any", joy, "hat", value)
             or event("joy_any", joy, "hat", value)
         end
     end
