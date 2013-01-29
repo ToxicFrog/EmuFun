@@ -22,5 +22,5 @@ eprintf("library ")
 -- load input configuration
 eprintf("controls ")
 local config = love.filesystem.load("controls.cfg")
-setfenv(config, { bind = input.bind })
+setfenv(config, setmetatable({ emufun = emufun }, { __index = input }))
 config()
