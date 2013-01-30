@@ -16,12 +16,27 @@ function File:loadConfig()
     end
 end
 
+function File:expandcommand(string)
+    local function escape(string)
+        return (string:gsub("'", [['\'']]))
+    end
+    return (string:gsub("$%b{}", function(match)
+        match = match:sub(3,-2)
+        if type(self[match]) == "function" then
+            return "'" .. escape(tostring(self[match](self))) .. "'"
+        else
+            return "'" .. escape(tostring(self[match])) .. "'"
+        end
+    end))
+end
+
 function File:run()
     local function exec(v)
         if type(v) == "function" then
             return v(self)
         elseif type(v) == "string" then
-            os.execute(v)
+            eprintf("Executing '"..self:expandcommand(v).."'\n")
+            os.execute(self:expandcommand(v))
             return false
         elseif type(v) == "table" then
             local rv
@@ -37,7 +52,17 @@ function File:run()
     -- the configuration file should define a command to execute
     -- if not, we fall through to the error
     if self.execute then
-        return exec(self.execute) or self.parent
+        if emufun.config.fullscreen then
+            love.graphics.toggleFullscreen()
+        end
+
+        local rv = exec(self.execute) or 0
+
+        if emufun.config.fullscreen then
+            love.graphics.toggleFullscreen()
+        end
+        love.event.clear()
+        return rv
     end
     
     return new "node.Message" ("Error!", "No configuration available to execute this file", self.parent)
