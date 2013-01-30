@@ -34,7 +34,6 @@ function View:draw()
         
     -- decorations at middle
     lg.triangle("fill", 4, H/2-20, 4, H/2, 20, H/2-10)
-    lg.triangle("fill", W-4, H/2-20, W-4, H/2, W-20, H/2-10)
         
     -- print system name at top
     lg.draw(self.icon, 0, 0)
