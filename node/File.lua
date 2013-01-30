@@ -16,7 +16,7 @@ function File:loadConfig()
     end
 end
 
-if love._os == "windows" then
+if love._os == "Windows" then
     function File:expandcommand(string)
         return '"' .. string:gsub("$%b{}", function(match)
             match = match:sub(3,-2)
