@@ -6,8 +6,6 @@ end
 
 require "lfs"
 
-love.OS = (love.filesystem.isDirectory("/") and "linux") or "windows"
-
 function love.load()
     load "util"
     eprintf("Loading modules: ")
