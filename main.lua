@@ -6,13 +6,26 @@ end
 
 require "lfs"
 
-load "util"
-load "input"
-load "calibration"
-load "loadgames"
-load "gamelist"
-
 function love.load()
+    load "util"
+    eprintf("Loading modules: ")
+    load "configuration"
+    load "input"
+    load "calibration"
+    load "loadgames"
+    load "gamelist"
+    eprintf("done.\n")
+
+    eprintf("Loading images: ")
+    emufun.images = {}
+    for _,file in ipairs(love.filesystem.enumerate "images") do
+        if file:match("%.png$") then
+            eprintf(file .. " ")
+            emufun.images[file:sub(1,-5)] = love.graphics.newImage("images/" .. file)
+        end
+    end
+    eprintf("done.\n")
+
     eprintf("Loading user settings: ")
     load "settings"
     eprintf("done.\n")
@@ -40,16 +53,6 @@ function love.load()
     love.graphics.setCaption("EmuFun")
     love.mouse.setVisible(false)
     eprintf("done\n")
-
-    eprintf("Loading images...")
-    emufun.images = {}
-    for _,file in ipairs(love.filesystem.enumerate "images") do
-        if file:match("%.png$") then
-            eprintf(file .. " ")
-            emufun.images[file:sub(1,-5)] = love.graphics.newImage("images/" .. file)
-        end
-    end
-    eprintf("done.\n")
 
     return emufun.calibration()
 end

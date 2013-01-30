@@ -1,9 +1,8 @@
 local Node = require "Object" :clone("node.Node")
 
-Node.emufun = emufun
-
 function Node:__init(name, parent)
     self.name = name
+    self.filename = name
     self.parent = parent
     self.icon = emufun.images.unknown
 end
@@ -40,9 +39,10 @@ end
 
 function Node:path()
     if self.parent then
-        return self.parent:path().."/"..self.name
+        local ppath = self.parent:path()
+        return (#ppath > 0 and (ppath .. "/") or "") .. self.filename
     else
-        return self.name
+        return self.filename
     end
 end
 
@@ -64,7 +64,7 @@ function Node:configure(node)
     end
 
     -- apply on-disk configuration, if present
-    setfenv(self.config, node)
+    setfenv(self.config, node:configure_env())
     self.config()
 end
 
@@ -75,7 +75,7 @@ end
 
 function Node:draw()
     love.graphics.draw(self.icon, 0, 0)
-    love.graphics.print(self.displayname or self.name, 26, 0)
+    love.graphics.print(self.name, 26, 0)
 end
 
 function Node:populate() end

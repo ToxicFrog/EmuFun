@@ -6,7 +6,7 @@ function File:__init(name, parent)
 
     self.icon = emufun.images.file
 
-    --self:loadConfig()
+    self:loadConfig()
     self:configure(self)
 end
 
@@ -17,14 +17,27 @@ function File:loadConfig()
 end
 
 function File:run()
+    local function exec(v)
+        if type(v) == "function" then
+            return v(self)
+        elseif type(v) == "string" then
+            os.execute(v)
+            return false
+        elseif type(v) == "table" then
+            local rv
+            for _,command in ipairs(v) do
+                rv = exec(v)
+            end
+            return rv
+        else
+            return new "node.Message" ("Error executing commands for " .. self:path(), "Unknown command type " .. type(v))
+        end
+    end
+
     -- the configuration file should define a command to execute
     -- if not, we fall through to the error
-    if self.command then
-        eprintf("STUB: %s %s\n", tostring(self:path()), tostring(self.command))
-        if type(self.command) == "function" then
-            self:command()
-        end
-        return self.parent
+    if self.execute then
+        return exec(self.execute) or self.parent
     end
     
     return new "node.Message" ("Error!", "No configuration available to execute this file", self.parent)
