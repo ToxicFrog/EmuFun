@@ -54,6 +54,7 @@ end
 local function skip() end
 
 local function test(self, f, lhs, ...)
+	if lhs == nil then return skip end
 	for _,rhs in ipairs {...} do
 		if f(lhs, rhs) then return bind(self) end
 	end
@@ -82,6 +83,10 @@ end
 
 function env:name_matches(...)
 	return test(self, function(x,y) return x:match(y) end, self.name, ...)
+end
+
+function env:extension(...)
+	return test(self, function(x,y) return x:match("%."..y.."$") end, self.name, ...)
 end
 
 function env:path_is(...)
