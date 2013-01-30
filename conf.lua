@@ -4,6 +4,8 @@ function love.conf(t)
     t.identity = "emufun"
     t.version = "0.8.0"
 
+    t.console = true -- enable console on windows for debug logging
+
     t.screen.width = 800
     t.screen.height = 600
     t.screen.fullscreen = false
