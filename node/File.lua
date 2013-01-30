@@ -16,18 +16,31 @@ function File:loadConfig()
     end
 end
 
-function File:expandcommand(string)
-    local function escape(string)
-        return (string:gsub("'", [['\'']]))
+if love._os == "windows" then
+    function File:expandcommand(string)
+        return '"' .. string:gsub("$%b{}", function(match)
+            match = match:sub(3,-2)
+            if type(self[match]) == "function" then
+                return '"' .. tostring(self[match](self)) .. '"'
+            else
+                return '"' .. tostring(self[match]) .. '"'
+            end
+        end) .. '"'
     end
-    return (string:gsub("$%b{}", function(match)
-        match = match:sub(3,-2)
-        if type(self[match]) == "function" then
-            return "'" .. escape(tostring(self[match](self))) .. "'"
-        else
-            return "'" .. escape(tostring(self[match])) .. "'"
+else
+    function File:expandcommand(string)
+        local function escape(string)
+            return (string:gsub("'", [['\'']]))
         end
-    end))
+        return (string:gsub("$%b{}", function(match)
+            match = match:sub(3,-2)
+            if type(self[match]) == "function" then
+                return "'" .. escape(tostring(self[match](self))) .. "'"
+            else
+                return "'" .. escape(tostring(self[match])) .. "'"
+            end
+        end))
+    end
 end
 
 function File:run()
@@ -35,8 +48,9 @@ function File:run()
         if type(v) == "function" then
             return v(self)
         elseif type(v) == "string" then
-            eprintf("Executing '"..self:expandcommand(v).."'\n")
-            os.execute(self:expandcommand(v))
+            local cmd = self:expandcommand(v)
+            eprintf("Executing '"..cmd.."'\n")
+            os.execute(cmd)
             return false
         elseif type(v) == "table" then
             local rv
