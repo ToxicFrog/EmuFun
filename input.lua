@@ -101,9 +101,31 @@ end
 -- every joystick and record them. We emit events only if the state of an
 -- axis changes between frames, so that someone holding a stick up doesn't
 -- trigger (say) joy_0_axis_2_up every single frame.
-local axes = {}
-for joy=0,love.joystick.getNumJoysticks()-1 do
-    axes[joy] = { hat = love.joystick.getHat(joy, 0); love.joystick.getAxes(0) }
+local function readJoystick(j)
+    local function dir(val)
+        if val > 0.95 then
+            return "up"
+        elseif val < -0.95 then
+            return "down"
+        else
+            return "center"
+        end
+    end
+
+    local axes = { hats = {}; love.joystick.getAxes(j) }
+    for i=1,love.joystick.getNumHats(j) do
+        axes.hats[i] = love.joystick.getHat(j, i)
+    end
+    for a=1,#axes do
+        axes[a] = dir(axes[a])
+    end
+
+    return axes
+end
+
+local joysticks = {}
+for joy=1,love.joystick.getNumJoysticks() do
+    joysticks[joy] = readJoystick(joy)
 end
 
 -- Every frame, scan joystick axes, compare them to the previous frame, and
@@ -111,49 +133,31 @@ end
 -- We also need to update timers for key-repeat-enabled events, and fire those
 -- events as needed.
 function love.update(dt)
-    local old_axes
-    
-    -- translate a joystick axis value into a descriptive string
-    local function direction(value)
-        return (value == 1 and "up")
-        or (value == -1 and "down")
-        or "center"
-    end
-    
-    -- check a single axis, and emit an event if it changed
-    local function do_axis(joy, axis, value)
-        if old_axes[axis] ~= value then
-            return event("joy_"..joy.."_axis_"..axis.."_"..direction(value))
-            or event("joy_any", joy, "axis", axis, direction(value))
+    -- scan joysticks
+    for j,axes in ipairs(joysticks) do
+        new_axes = readJoystick(j)
+
+        -- check hats
+        for h,ndir in ipairs(new_axes.hats) do
+            -- hat has moved since last time
+            local dir = axes.hats[h]
+            if ndir ~= dir then
+                event("!joy_"..j.."_hat_"..h.."_"..dir, j, "hat", h, dir)
+                event("joy_"..j.."_hat_"..h.."_"..ndir, j, "hat", h, ndir)
+            end
         end
-    end
-    
-    -- check a hat-switch, and emit an event if it changed.
-    -- FIXME: this should work for multiple hats on the same stick.
-    local function do_hat(joy, value)
-        if value ~= old_axes.hat then
-            stop_timer("joy_"..joy.."_hat_"..old_axes.hat)
-            start_timer("joy_"..joy.."_hat_"..value)
-            
-            return event("joy_"..joy.."_hat_"..value, joy, "hat", value)
-            or event("joy_" .. joystick .. "_hat_any", joy, "hat", value)
-            or event("joy_any_hat_" .. value, joy, "hat", value)
-            or event("joy_any_hat_any", joy, "hat", value)
-            or event("joy_any", joy, "hat", value)
+
+        -- check sticks
+        for a,ndir in ipairs(new_axes) do
+            local dir = axes[a]
+            if ndir ~= dir then
+                event("!joy_"..j.."_axis_"..a.."_"..dir, j, "axis", a, dir)
+                event("joy_"..j.."_axis_"..a.."_"..ndir, j, "axis", a, ndir)
+            end
         end
-    end
-    
-    -- iterate over all the axes on all the joysticks and check them
-    for joy,joy_axes in pairs(axes) do
-        local new_axes = { hat = love.joystick.getHat(joy, 0); love.joystick.getAxes(joy) }
-        old_axes = joy_axes
-        
-        for axis,value in ipairs(new_axes) do
-            do_axis(joy, axis, value)
-        end
-        
-        do_hat(joy, new_axes.hat)
-        axes[joy] = new_axes
+
+        -- store results
+        joysticks[joy] = new_axes
     end
     
     -- update timers
