@@ -47,11 +47,10 @@ function View:draw()
         lg.translate(24, H/2-22 + (i - self.index) * 28)
 
         if i == self.index then
-        	lg.setColor(128, 255, 128)
+            node:draw(128, 255, 128)
+        else
+            node:draw()
         end
-
-        node:draw()
-    	lg.setColor(255, 255, 255)
 
         lg.pop()
     end

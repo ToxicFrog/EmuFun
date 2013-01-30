@@ -4,7 +4,10 @@ function Node:__init(name, parent)
     self.name = name
     self.filename = name
     self.parent = parent
+    self.self = self
     self.icon = emufun.images.unknown
+
+    self.r,self.g,self.b = 255, 255, 255
 end
 
 function Node:__lt(rhs)
@@ -73,7 +76,13 @@ function Node:run()
     return new "node.Message" ("Error!", "This node doesn't support activation. Report this as a bug.", self.parent)
 end
 
-function Node:draw()
+-- draw this node with an optional colour mask
+function Node:draw(r, g, b)
+    local min = math.min
+    r = r and min(r, self.r) or self.r
+    g = g and min(g, self.g) or self.g
+    b = b and min(b, self.b) or self.b
+    love.graphics.setColor(r,g,b)
     love.graphics.draw(self.icon, 0, 0)
     love.graphics.print(self.name, 26, 0)
 end
