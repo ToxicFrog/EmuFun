@@ -93,7 +93,7 @@ function love.joystickpressed(j, b)
     return event("joy_"..j.."_button_"..b, j, "button", b)
 end
 
-function love.joystickreleased(joystick, button)
+function love.joystickreleased(j, b)
     return event("!joy_"..j.."_button_"..b, j, "button", b)
 end
 
@@ -157,7 +157,7 @@ function love.update(dt)
         end
 
         -- store results
-        joysticks[joy] = new_axes
+        joysticks[j] = new_axes
     end
     
     -- update timers
