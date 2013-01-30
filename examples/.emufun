@@ -1,0 +1,10 @@
+-- default movie playing configuration
+if love._os == "Windows" then
+	type_is("media/video") {
+		execute = '"C:/Program Files (x86)/VideoLAN/VLC/vlc.exe" -f --intf http --http-host 0.0.0.0:80 --extraintf rc --rc-host 0.0.0.0:4212 --no-keyboard-events --play-and-exit ${path}';
+	}
+else
+	type_is("media/video") {
+		execute = "vlc -f --intf http --http-host 0.0.0.0:80 --extraintf rc --rc-host 0.0.0.0:4212 --no-keyboard-events --play-and-exit ${path}";
+	}
+end
