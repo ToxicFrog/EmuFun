@@ -6,7 +6,7 @@ local settings = {
 
 -- if this is our first time, write the default configuration files
 for _,file in ipairs(settings) do
-	--love.filesystem.write(file, love.filesystem.read(file))
+	love.filesystem.write(file, love.filesystem.read(file))
 end
 
 -- load program configuration
