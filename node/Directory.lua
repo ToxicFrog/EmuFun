@@ -1,6 +1,6 @@
 local Node = require "node.Node"
 local File = require "node.File"
-local Directory = Node:clone()
+local Directory = Node:clone("node.Directory")
 
 function Directory:__init(name, parent)
 	Node.__init(self, name, parent)
@@ -10,10 +10,6 @@ function Directory:__init(name, parent)
     -- load configuration from disk, if present
     self:loadConfig()
 	self:configure(self)
-end
-
-function Directory:type()
-	return "directory"
 end
 
 function Directory:run()

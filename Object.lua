@@ -1,6 +1,7 @@
 local Object = {}
 
 Object.__index = Object
+Object._NAME = "Object"
 
 function Object:new(...)
 	local obj = setmetatable({}, self)
@@ -8,13 +9,14 @@ function Object:new(...)
 	return obj
 end
 
-function Object:clone()
+function Object:clone(name)
 	local child = {}
 
 	for k,v in pairs(self) do
 		child[k] = v
 	end
 	child.__index = child
+	child._NAME = name
 	
 	return child
 end

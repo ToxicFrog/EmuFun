@@ -1,5 +1,5 @@
 local Node = require "node.Node"
-local File = Node:clone()
+local File = Node:clone("node.File")
 
 function File:__init(name, parent)
     Node.__init(self, name, parent)
@@ -8,10 +8,6 @@ function File:__init(name, parent)
 
     --self:loadConfig()
     self:configure(self)
-end
-
-function File:type()
-    return "file"
 end
 
 function File:loadConfig()
