@@ -22,10 +22,6 @@ function Node:configure_env()
 	local mt = {}
 
 	function mt.__newindex(proxy,k,v)
-		print("Setting " .. self:path() .. "::" .. tostring(k) .. " = " .. tostring(v))
-		if self[k] == nil then
-			print("Warning: overwriting uninitialized setting " .. tostring(k) .. " in node " .. self:path())
-		end
 		self[k] = v
 	end
 
@@ -45,7 +41,6 @@ end
 local function bind(self)
 	return function(settings)
 		for k,v in pairs(settings) do
-			print("Setting " .. self:path() .. "::" .. tostring(k) .. " = " .. tostring(v))
 			self[k] = v
 		end
 	end
