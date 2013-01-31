@@ -60,15 +60,13 @@ end
 Node.config = function() end
 
 -- load and apply the configuration
-function Node:configure(node)
+function Node:configure(cfg)
     -- inherit parent's configuration
     if self.parent then
-        self.parent:configure(node)
+        self.parent:configure(cfg)
     end
 
-    -- apply on-disk configuration, if present
-    setfenv(self.config, node:configure_env())
-    self.config()
+    cfg:add(self.config)
 end
 
 function Node:run()

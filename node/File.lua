@@ -6,8 +6,11 @@ function File:__init(name, parent)
 
     self.icon = emufun.images.file
 
+    -- load configuration from disk, if present
+    local cfg = new "Configuration" (self)
     self:loadConfig()
-    self:configure(self)
+    self:configure(cfg)
+    cfg:finalize()
 end
 
 function File:loadConfig()
@@ -80,6 +83,10 @@ function File:run()
     end
     
     return new "node.Message" ("Error!", "No configuration available to execute this file", self.parent)
+end
+
+function File:extension()
+    return self.name:match("%.([^%.]+)$")
 end
 
 return File

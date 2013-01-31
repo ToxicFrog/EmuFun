@@ -1,5 +1,6 @@
 local Node = require "node.Node"
 local File = require "node.File"
+local Configuration = require "Configuration"
 local Directory = Node:clone("node.Directory")
 
 function Directory:__init(name, parent)
@@ -8,8 +9,10 @@ function Directory:__init(name, parent)
 	self.icon = emufun.images.directory
 
     -- load configuration from disk, if present
+    local cfg = new "Configuration" (self)
     self:loadConfig()
-	self:configure(self)
+	self:configure(cfg)
+    cfg:finalize()
 end
 
 function Directory:run()

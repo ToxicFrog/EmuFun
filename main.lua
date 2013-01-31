@@ -9,7 +9,6 @@ require "lfs"
 function love.load()
     load "util"
     eprintf("Loading modules: ")
-    load "configuration"
     load "input"
     load "calibration"
     load "loadgames"
