@@ -85,6 +85,10 @@ function File:run()
     return new "node.Message" ("Error!", "No configuration available to execute this file", self.parent)
 end
 
+function File:dir()
+    return self.parent:path()
+end
+
 function File:extension()
     return self.name:match("%.([^%.]+)$")
 end

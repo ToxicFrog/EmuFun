@@ -26,21 +26,22 @@ local function contract()
 end
 
 -- the user has selected an entry in the list
--- the corresponding node's :run() method will return the target node,
+-- the corresponding node's :run() method will return the target nodes,
 -- or a number N indicating "go back N levels"
 local function expand()
-    local next = view:selected():run()
-    if type(next) == "number" then
-        for i=1,next do
+    local next = { view:selected():run() }
+    if type(next[1]) == "number" then
+        for i=1,next[1] do
             contract()
         end
     else
-        push(nil, nil, next)
+        push(nil, nil, unpack(next))
     end
 end
 
-function emufun.gamelist()
-    push(nil, "Media Library", unpack(emufun.library))
+function emufun.gamelist(root, library)
+    push(nil, nil, root)
+    push(nil, nil, unpack(library))
 
     input.bind("up", prev)
     input.bind("down", next)

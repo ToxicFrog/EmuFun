@@ -57,4 +57,8 @@ function Directory:populate(...)
     self:sort()
 end
 
+function Directory:dir()
+    return self:path()
+end
+
 return Directory
