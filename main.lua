@@ -1,25 +1,24 @@
 emufun = {}
 
 function load(module)
+    io.stderr:write(" "..module)
     return assert(love.filesystem.load(module..".lua"))()
 end
 
 require "lfs"
 
 function love.load()
+    io.stderr:write("Loading modules:")
     load "util"
-    eprintf("Loading modules: ")
     load "input"
-    load "calibration"
-    load "loadgames"
-    load "gamelist"
-    eprintf("done.\n")
+    load "state"
+    eprintf(" done.\n")
 
-    eprintf("Loading images: ")
+    eprintf("Loading images:")
     emufun.images = {}
     for _,file in ipairs(love.filesystem.enumerate "images") do
         if file:match("%.png$") then
-            eprintf(file .. " ")
+            eprintf(" "..file)
             emufun.images[file:sub(1,-5)] = love.graphics.newImage("images/" .. file)
         end
     end
