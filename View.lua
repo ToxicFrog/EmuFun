@@ -21,41 +21,52 @@ function View:__init(icon, title, ...)
 	end
 end
 
+local W,H = love.graphics.getWidth(),love.graphics.getHeight()
+local LH = math.floor(H/emufun.config.lines)
+
+local function atLine(line)
+    local lg = love.graphics
+
+    lg.push()
+    lg.translate(0, math.floor(H/emufun.config.lines * line))
+end
+
+local function doneLine()
+    love.graphics.pop()
+end
+
 function View:draw()
-    local W,H = love.graphics.getWidth(),love.graphics.getHeight()
-    
 	local lg = love.graphics
 	local clip = lg.setScissor
 
-	lg.setColor(255, 255, 255)
+    atLine(0)
+        lg.setColor(32, 32, 32)
+        lg.rectangle("fill", 0, 0, W, LH)
+        lg.setColor(255, 255, 255)
+        lg.draw(self.icon, 0, 0, 0, LH/self.icon:getWidth(), LH/self.icon:getHeight())
+        lg.print(self.title, LH + 2, 0)
+    doneLine()
 
-    -- decorations at top
-    lg.rectangle("fill", 0, 25, W, 2)
-        
-    -- decorations at middle
-    lg.triangle("fill", 4, H/2-20, 4, H/2, 20, H/2-10)
-        
-    -- print system name at top
-    lg.draw(self.icon, 0, 0)
-    lg.print(self.title, 26, 0)
-        
-    -- print list of ROMs
-    clip(24, 26, W-48, H)
+    local padding = math.floor(LH * 0.2)
+    local half = math.floor(LH/2)
 
-	for i,node in ipairs(self.list) do
-        lg.push()
-        lg.translate(24, H/2-22 + (i - self.index) * 28)
-
-        if i == self.index then
-            node:draw(128, 255, 128)
-        else
-            node:draw()
+    for i=1,emufun.config.lines do
+        local index = i - math.floor(emufun.config.lines/2) + self.index
+        local node = self.list[index]
+        if node then
+            atLine(i)
+            if index == self.index then
+                self:drawNode(node, 128, 255, 128)
+                lg.triangle("fill",
+                    padding, padding,
+                    padding, LH-padding,
+                    LH-padding, half)
+            else
+                self:drawNode(node)
+            end
+            doneLine()
         end
-
-        lg.pop()
     end
-
-    clip()
 end
 
 function View:prev()
@@ -68,6 +79,17 @@ end
 
 function View:selected()
 	return self.list[self.index]
+end
+
+-- draw this node with an optional colour mask
+function View:drawNode(node, r, g, b)
+    local min = math.min
+    r = r and min(r, node.r) or node.r
+    g = g and min(g, node.g) or node.g
+    b = b and min(b, node.b) or node.b
+    love.graphics.setColor(r,g,b)
+    love.graphics.draw(node.icon, LH, 0, 0, LH/node.icon:getWidth(), LH/node.icon:getHeight())
+    love.graphics.print(node.name, 2*LH+2, 0)
 end
 
 return View

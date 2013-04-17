@@ -11,7 +11,7 @@ function love.load()
     io.stderr:write("Loading modules:")
     load "util"
     load "input"
-    load "state"
+    --load "state"
     eprintf(" done.\n")
 
     eprintf("Loading images:")
@@ -42,17 +42,19 @@ function love.load()
         local modes = love.graphics.getModes()
         table.sort(modes, function(x,y) return x.width > y.width or (x.width == y.width and x.height > y.height) end)
         
+        emufun.config.width = modes[1].width
+        emufun.config.height = modes[1].height
         love.graphics.setMode(modes[1].width, modes[1].height, emufun.config.fullscreen)
     end
     
     --love.graphics.setFont("LiberationMono-Bold.ttf", 24)
-    love.graphics.setNewFont(24)
+    love.graphics.setNewFont(math.floor(emufun.config.height/emufun.config.lines) - 8)
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setCaption("EmuFun")
     love.mouse.setVisible(false)
     eprintf("done\n")
 
-    return emufun.calibration()
+    return state "load-libraries" ()
 end
 
 function emufun.quit()

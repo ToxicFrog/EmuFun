@@ -39,19 +39,19 @@ local function expand()
     end
 end
 
-function emufun.gamelist(root, library)
-    push(nil, nil, root)
-    push(nil, nil, unpack(library))
+local root, library = ...
 
-    input.bind("up", prev)
-    input.bind("down", next)
-    input.bind("left", contract)
-    input.bind("right", expand)
+push(nil, nil, root)
+push(nil, nil, unpack(library))
 
-    input.setRepeat("up", 0.5, 0.1)
-    input.setRepeat("down", 0.5, 0.1)
+input.bind("up", prev)
+input.bind("down", next)
+input.bind("left", contract)
+input.bind("right", expand)
 
-    function love.draw()
-        view:draw()
-    end
+input.setRepeat("up", 0.5, 0.1)
+input.setRepeat("down", 0.5, 0.1)
+
+function love.draw()
+    view:draw()
 end

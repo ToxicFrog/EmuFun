@@ -16,12 +16,6 @@ local config = love.filesystem.load("emufun.cfg")
 setfenv(config, emufun.config)
 config()
 
--- load library configuration
-eprintf("library ")
-emufun.library = new "node.Node" ("Internal Library Root")
-emufun.library.filename = ""
-emufun.library.config = love.filesystem.load("library.cfg")
-
 -- load input configuration
 eprintf("controls ")
 local config = love.filesystem.load("controls.cfg")

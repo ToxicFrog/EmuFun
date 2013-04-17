@@ -2,6 +2,12 @@ function eprintf(...)
     return io.stderr:write(string.format(...))
 end
 
+function state(name)
+    return function(...)
+        return love.filesystem.load("state/" .. name .. ".lua")(...)
+    end
+end
+
 getmetatable("").__mod = function(self, arg)
     if type(arg) == "table" then
         return self:format(unpack(arg))
