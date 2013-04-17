@@ -74,17 +74,6 @@ function Node:run()
     return new "node.Message" ("Error!", "This node doesn't support activation. Report this as a bug.", self.parent)
 end
 
--- draw this node with an optional colour mask
-function Node:draw(r, g, b)
-    local min = math.min
-    r = r and min(r, self.r) or self.r
-    g = g and min(g, self.g) or self.g
-    b = b and min(b, self.b) or self.b
-    love.graphics.setColor(r,g,b)
-    love.graphics.draw(self.icon, 0, 0)
-    love.graphics.print(self.name, 26, 0)
-end
-
 function Node:populate() end
 
 return Node

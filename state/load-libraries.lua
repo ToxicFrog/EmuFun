@@ -31,11 +31,10 @@ end
 root:add(library)
 
 for _,path in ipairs(emufun.config.library_paths) do
-    local lib = Directory:new(path, nil)
+    local lib = Directory:new(path, library)
     lib:populate()
 
     if lib[1] then
-        lib.parent = library
         library:add(lib)
     end
 end

@@ -19,6 +19,7 @@ function View:__init(icon, title, ...)
 			end
 		end
 	end
+    table.sort(self.list)
 end
 
 local W,H = love.graphics.getWidth(),love.graphics.getHeight()
