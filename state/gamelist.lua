@@ -2,7 +2,7 @@ local views = {}
 local view
 
 local function push(icon, title, node, ...)
-    table.insert(views, new "View" (icon or node.icon, title or node.name, node, ...))
+    table.insert(views, new "View" (icon or node.icon, title or node:path(), node, ...))
     view = views[#views]
 end
 
