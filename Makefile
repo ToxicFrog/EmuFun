@@ -1,7 +1,8 @@
 # :noTabs=false:
-SRCS=*.lua
+FILES=$(shell find -name '*.lua' -or -name '*.cfg') images/* COPYING README
 
-all: emufun.love
+all: release/emufun-HEAD.love
 
-emufun.love: ${SRCS}
-	zip emufun.love ${SRCS}
+release/emufun-HEAD.love: ${FILES}
+	rm -f $@
+	zip $@ $+
