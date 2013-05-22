@@ -18,7 +18,7 @@ end
 local tests = {}
 
 function tests.is(x,y)
-	return x==y
+	return x == y
 end
 
 function tests.matches(x,y)
@@ -126,52 +126,4 @@ function Configuration:realize(cond)
 	end
 end
 
-do return Configuration end
-
-local function test(self, f, lhs, ...)
-	if lhs == nil then return skip end
-	for _,rhs in ipairs {...} do
-		if f(lhs, rhs) then return bind(self) end
-	end
-	return skip
-end
-
-function env:type_is(...)
-	return test(self, function(x,y) return x == y end, self.type, ...)
-end
-
-function env:type_contains(...)
-	return test(self, function(x,y) return x:find(y) end, self.type, ...)
-end
-
-function env:type_matches(...)
-	return test(self, function(x,y) return x:match(y) end, self.type, ...)
-end
-
-function env:name_is(...)
-	return test(self, function(x,y) return x == y end, self.name, ...)
-end
-
-function env:name_contains(...)
-	return test(self, function(x,y) return x:find(y) end, self.name, ...)
-end
-
-function env:name_matches(...)
-	return test(self, function(x,y) return x:match(y) end, self.name, ...)
-end
-
-function env:extension(...)
-	return test(self, function(x,y) return x:match("%."..y.."$") end, self.name, ...)
-end
-
-function env:path_is(...)
-	return test(self, function(x,y) return x == y end, self:path(), ...)
-end
-
-function env:path_contains(...)
-	return test(self, function(x,y) return x:find(y) end, self:path(), ...)
-end
-
-function env:path_matches(...)
-	return test(self, function(x,y) return x:match(y) end, self:path(), ...)
-end
+return Configuration

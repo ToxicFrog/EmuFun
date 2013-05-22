@@ -11,7 +11,6 @@ function love.load()
     io.stderr:write("Loading modules:")
     load "util"
     load "input"
-    --load "state"
     eprintf(" done.\n")
 
     eprintf("Loading images:")
