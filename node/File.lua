@@ -78,7 +78,6 @@ function File:run()
         if emufun.config.fullscreen then
             love.graphics.toggleFullscreen()
         end
-        love.event.clear()
         return rv
     end
     

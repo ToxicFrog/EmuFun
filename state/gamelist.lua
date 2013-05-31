@@ -37,6 +37,7 @@ local function expand()
     else
         push(nil, nil, unpack(next))
     end
+    love.event.clear()
 end
 
 local root, library = ...
