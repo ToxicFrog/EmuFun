@@ -1,8 +1,9 @@
 # :noTabs=false:
-FILES=$(shell find -name '*.lua' -or -name '*.cfg') images/* COPYING README
 
 all: release/emufun-HEAD.love
 
-release/emufun-HEAD.love: ${FILES}
+release/emufun-HEAD.love: .FORCE
 	rm -f $@
-	zip $@ $+
+	git archive --format=zip --output=$@ HEAD
+
+.FORCE:
