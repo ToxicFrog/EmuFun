@@ -56,6 +56,13 @@ function love.load()
     return state "load-libraries" ()
 end
 
+function love.draw() end
+
+function love.update(dt)
+    -- cap framerate at 30fps
+    love.timer.sleep(1/30 - dt)
+end
+
 function emufun.quit()
     love.event.quit()
 end

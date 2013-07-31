@@ -3,33 +3,26 @@
 -- Note that it doesn't really support joystick axes except as d-pads - that is
 -- to say, pushing an axis all the way will register as (say) "up" and anything
 -- else is "center".
+require "timer"
+
+timer.create("IDLE", 60)
+timer.start("IDLE")
+
 input = {}
 
 -- event bindings
 local bindings = {}
 
--- timers used for key-repeat settings
-local timers = {}
-
-local function start_timer(name)
-    if timers[name] and not timers[name].t then
-        timers[name].t = timers[name].delay
-    end
-end
-
-local function stop_timer(name)
-    if timers[name] then
-        timers[name].t = nil
-    end
-end
-
 -- Dispatch an event with the given names and arguments.
 -- Returns true if an event handler existed, false otherwise
-local function event(name, ...)
+function input.event(name, ...)
+    timer.reset("IDLE")
+
     if name:sub(1,1) == "!" then
-        stop_timer(name:sub(2))
+        -- if a keyup event, stop the key-repeat timer
+        timer.stop(name:sub(2))
     else
-        start_timer(name)
+        timer.start(name)
     end
     if bindings[name] then
         bindings[name](...)
@@ -41,10 +34,10 @@ end
 function input.bind(from, to, up)
     if type(to) == "string" then
         bindings[from] = function(...)
-            return event(to, ...)
+            return input.event(to, ...)
         end
         bindings["!"..from] = function(...)
-            return event(up or "!"..to, ...)
+            return input.event(up or "!"..to, ...)
         end
     else
         bindings[from] = to
@@ -69,32 +62,30 @@ end
 -- eg: love.set_repeat("key_a", 1.0, 0.5)
 function input.setRepeat(event, delay, period)
     if delay then
-        local t
-        timers[event] = { delay = delay, period = period }
+        timer.create(event, delay, period)
     else
-        timers[event] = nil
-        timers["!"..event] = nil
+        timer.destroy(event)
     end
 end
 
 -- love2d callback function for keyboard events. Pressing 'a' will trigger event
 -- key_a() or, if that doesn't exist, key_any('a')
 function love.keypressed(name, num)
-    return event("key_"..name)
+    return input.event("key_"..name)
 end
 
 function love.keyreleased(name, num)
-    return event("!key_"..name)
+    return input.event("!key_"..name)
 end
 
 -- same as above, but for joysticks. Joystick events are parameterized by both
 -- stick and button; button 3 on stick 0 shows up as joy_0_button_3.
 function love.joystickpressed(j, b)
-    return event("joy_"..j.."_button_"..b, j, "button", b)
+    return input.event("joy_"..j.."_button_"..b, j, "button", b)
 end
 
 function love.joystickreleased(j, b)
-    return event("!joy_"..j.."_button_"..b, j, "button", b)
+    return input.event("!joy_"..j.."_button_"..b, j, "button", b)
 end
 
 -- joystick axis handling. At initialization, read the state of every axis on
@@ -130,9 +121,10 @@ end
 
 -- Every frame, scan joystick axes, compare them to the previous frame, and
 -- emit events for any that have changed.
--- We also need to update timers for key-repeat-enabled events, and fire those
--- events as needed.
+local _update = love.update
 function love.update(dt)
+    _update(dt)
+
     -- scan joysticks
     for j,axes in ipairs(joysticks) do
         new_axes = readJoystick(j)
@@ -142,8 +134,8 @@ function love.update(dt)
             -- hat has moved since last time
             local dir = axes.hats[h]
             if ndir ~= dir then
-                event("!joy_"..j.."_hat_"..h.."_"..dir, j, "hat", h, dir)
-                event("joy_"..j.."_hat_"..h.."_"..ndir, j, "hat", h, ndir)
+                input.event("!joy_"..j.."_hat_"..h.."_"..dir, j, "hat", h, dir)
+                input.event("joy_"..j.."_hat_"..h.."_"..ndir, j, "hat", h, ndir)
             end
         end
 
@@ -151,26 +143,12 @@ function love.update(dt)
         for a,ndir in ipairs(new_axes) do
             local dir = axes[a]
             if ndir ~= dir then
-                event("!joy_"..j.."_axis_"..a.."_"..dir, j, "axis", a, dir)
-                event("joy_"..j.."_axis_"..a.."_"..ndir, j, "axis", a, ndir)
+                input.event("!joy_"..j.."_axis_"..a.."_"..dir, j, "axis", a, dir)
+                input.event("joy_"..j.."_axis_"..a.."_"..ndir, j, "axis", a, ndir)
             end
         end
 
         -- store results
         joysticks[j] = new_axes
     end
-    
-    -- update timers
-    for evt,timer in pairs(timers) do
-        if timer.t then
-            timer.t = timer.t - dt
-            if timer.t <= 0 then
-                timer.t = timer.period
-                event(evt)
-            end
-        end
-    end
-    
-    -- cap framerate at 30fps
-    love.timer.sleep(1/30 - dt)
 end
