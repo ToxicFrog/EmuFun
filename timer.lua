@@ -14,7 +14,6 @@ local timers = {}
 -- -period- seconds. If there is no period specified, the timer will fire
 -- only once and must be manually restarted afterwards.
 function timer.create(name, delay, period)
-  print("timer created", name, delay, period)
   timers[name] = { delay = delay, period = period }
 end
 
@@ -38,7 +37,6 @@ function timer.start(name, t, period)
     timer.create(name, t, period)
   end
 
-  print("timer started", name, delay, period)
   timers[name].t = t or timers[name].t or timers[name].delay
 end
 
@@ -61,7 +59,6 @@ function love.update(dt)
     if timer.t then
       timer.t = timer.t - dt
       if timer.t <= 0 then
-        print("timer fired", evt, timer.period)
         input.event(evt)
         -- non-repeating timers have period=nil so this automatically clears the timer
         timer.t = timer.period
