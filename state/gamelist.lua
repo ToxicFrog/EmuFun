@@ -1,28 +1,42 @@
 local views = {}
 local view
 
+local visible
+local function hide() visible = false end
+local function show() visible = true end
+
 local function push(icon, title, node, ...)
+    show()
     table.insert(views, new "View" (icon or node.icon, title or node:path(), node, ...))
     view = views[#views]
 end
 
 local function pop()
+    show()
     table.remove(views)
     view = views[#views]
 end
 
 local function prev()
+    show()
     view:prev()
 end
 
 local function next()
+    show()
     view:next()
 end
 
 local function contract()
+    show()
     if #views > 1 then
         pop()
     end
+end
+
+local function menu()
+    show()
+    hidden = false
 end
 
 -- the user has selected an entry in the list
@@ -49,10 +63,15 @@ input.bind("up", prev)
 input.bind("down", next)
 input.bind("left", contract)
 input.bind("right", expand)
+input.bind("menu", menu)
+
+input.bind("IDLE", hide)
 
 input.setRepeat("up", 0.5, 0.1)
 input.setRepeat("down", 0.5, 0.1)
 
 function love.draw()
-    view:draw()
+    if visible then
+        view:draw()
+    end
 end
