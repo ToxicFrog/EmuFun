@@ -52,6 +52,7 @@ local function expand()
         push(nil, nil, unpack(next))
     end
     love.event.clear()
+    timer.reset("IDLE")
 end
 
 local root, library = ...
