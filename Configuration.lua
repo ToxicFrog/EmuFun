@@ -17,15 +17,22 @@ end
 
 local tests = {}
 
-function tests.is(x,y)
+function tests._is(x,y)
 	return x == y
 end
 
-function tests.matches(x,y)
+function tests._in(x, y)
+	for _,v in ipairs(y) do
+		if x == v then return true end
+	end
+	return false
+end
+
+function tests._matches(x,y)
 	return x:match(y) ~= nil
 end
 
-function tests.contains(x,y)
+function tests._contains(x,y)
 	return x:find(y, 1, true) ~= nil
 end
 
@@ -63,8 +70,8 @@ function Configuration:__init(node)
 		-- if they're requesting a conditional function, generate and return one
 		-- conditional functions take a list of matching values and return a function
 		-- that takes a table of settings to apply when the condition matches
-		local prop,test = k:match("(%w+)_(%w+)")
-		if test == "is" or test == "contains" or test == "matches" then
+		local prop,test = k:match("(%w+)(_%w+)")
+		if tests[test] then
 			return function(...)
 				return self:mkcond(prop, test, ...)
 			end
