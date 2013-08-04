@@ -11,8 +11,6 @@ local function liberror(message)
     return node
 end
 
-eprintf("Reading game library: ")
-
 local root,library
 
 root = new "node.Node" ("EmuFun")
@@ -42,7 +40,5 @@ end
 if #library == 0 then
     library:add(liberror("Media library is empty!"))
 end
-
-eprintf("done.\n")
 
 return state "gamelist" (root, library)

@@ -10,7 +10,6 @@ for _,file in ipairs(settings) do
 end
 
 -- load program configuration
-eprintf("program ")
 emufun.config = { flags = {} }
 local config = love.filesystem.load("emufun.cfg")
 setfenv(config, emufun.config)
@@ -25,7 +24,6 @@ for _,arg in pairs(arg) do
 end
 
 -- load input configuration
-eprintf("controls ")
 local config = love.filesystem.load("controls.cfg")
 setfenv(config, setmetatable({ emufun = emufun, love = love }, { __index = input }))
 config()

@@ -46,7 +46,6 @@ function Configuration:mkcond(key, testname, ...)
 		end
 
 		for _,rhs in ipairs(vals) do
-			--print("test", key, lhs, testname, rhs, test(lhs,rhs))
 			if test(lhs, rhs) then
 				return true
 			end
@@ -119,7 +118,6 @@ function Configuration:finalize()
 	until not pass or (#self.conds == 0)
 
 	for k,v in pairs(self.env) do
-		print("SET", self.node:path(), k, v)
 		self.node[k] = v
 	end
 end

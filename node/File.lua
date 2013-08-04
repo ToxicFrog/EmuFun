@@ -52,7 +52,6 @@ function File:run()
             return v(self)
         elseif type(v) == "string" then
             local cmd = self:expandcommand(v)
-            eprintf("Executing '"..cmd.."'\n")
             os.execute(cmd)
             return false
         elseif type(v) == "table" then

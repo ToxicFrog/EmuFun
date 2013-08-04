@@ -1,33 +1,24 @@
 emufun = {}
 
 function load(module)
-    io.stderr:write(" "..module)
     return assert(love.filesystem.load(module..".lua"))()
 end
 
 require "lfs"
 
 function love.load()
-    io.stderr:write("Loading modules:")
     load "util"
     load "input"
-    eprintf(" done.\n")
 
-    eprintf("Loading images:")
     emufun.images = {}
     for _,file in ipairs(love.filesystem.enumerate "images") do
         if file:match("%.png$") then
-            eprintf(" "..file)
             emufun.images[file:sub(1,-5)] = love.graphics.newImage("images/" .. file)
         end
     end
-    eprintf("done.\n")
 
-    eprintf("Loading user settings: ")
     load "settings"
-    eprintf("done.\n")
     
-    eprintf("Setup renderer: ")
     -- if the user specified a resolution in emufun.cfg, we use that
     -- otherwise, we get a list of supported modes and use the highest-res one
     -- in this modern age of LCDs, this is usually the same resolution that
@@ -51,7 +42,6 @@ function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
     love.graphics.setCaption("EmuFun")
     love.mouse.setVisible(false)
-    eprintf("done\n")
 
     return state "load-libraries" ()
 end
