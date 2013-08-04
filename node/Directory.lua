@@ -39,11 +39,9 @@ function Directory:populate(...)
     end
     
     for item in lfs.dir(self:path()) do
-        local itempath = self:path().."/"..item
-        
         -- create a node for it
         local node
-        if lfs.attributes(itempath, "mode") == "directory" then
+        if lfs.attributes(self:path(item), "mode") == "directory" then
             node = Directory:new(item, self)
         else
             node = File:new(item, self)

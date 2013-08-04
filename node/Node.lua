@@ -40,10 +40,12 @@ function Node:sort()
     table.sort(self)
 end
 
-function Node:path()
+function Node:path(suffix)
     if self.parent then
         local ppath = self.parent:path()
-        return (#ppath > 0 and (ppath .. "/") or "") .. self.filename
+        return (#ppath > 0 and (ppath .. "/") or "")
+            .. self.filename
+            .. (suffix and ("/" .. suffix) or "")
     else
         return self.filename
     end
