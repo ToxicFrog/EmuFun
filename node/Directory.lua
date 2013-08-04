@@ -27,9 +27,13 @@ function Directory:run()
 end
 
 function Directory:loadConfig()
-	local config = loadfile(self:path() .. "/.emufun")
-
-	self.config = config or self.config
+    for _,name in ipairs(emufun.config.cfg_names) do
+        local config = loadfile(self:path(name))
+        if config then
+            self.config = config
+            break
+        end
+    end
 end
 
 function Directory:populate(...)
