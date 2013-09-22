@@ -82,6 +82,20 @@ function View:selected()
 	return self.list[self.index]
 end
 
+-- hacky workaround for love.graphics barfing on some things that should be valid utf8
+function love.graphics.safeprint(str, ...)
+    local ok = pcall(love.graphics.print, str, ...)
+    if ok then return end
+
+    print("Error displaying title: ", str)
+    str = str:gsub("[^%w%s%p]", "?")
+    print("Falling back to:", str)
+    ok = pcall(love.graphics.print, str, ...)
+    if ok then return end
+
+    love.graphics.print("[corrupted filename]", ...)
+end
+
 -- draw this node with an optional colour mask
 function View:drawNode(node, r, g, b)
     local min = math.min
@@ -90,7 +104,7 @@ function View:drawNode(node, r, g, b)
     b = b and min(b, node.b) or node.b
     love.graphics.setColor(r,g,b)
     love.graphics.draw(node.icon, LH, 0, 0, LH/node.icon:getWidth(), LH/node.icon:getHeight())
-    love.graphics.print(node.name, 2*LH+2, 0)
+    love.graphics.safeprint(node.name, 2*LH+2, 0)
 end
 
 return View
