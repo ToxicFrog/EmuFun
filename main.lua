@@ -56,8 +56,3 @@ end
 function emufun.quit()
     love.event.quit()
 end
-
-function emufun.restart()
-    load "main"
-    return love.load()
-end
