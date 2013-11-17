@@ -10,6 +10,9 @@ timer.start("IDLE")
 
 input = {}
 
+input.keyboard_enabled = true
+input.controller_enabled = true
+
 -- event bindings
 local bindings = {}
 
@@ -71,21 +74,29 @@ end
 -- love2d callback function for keyboard events. Pressing 'a' will trigger event
 -- key_a() or, if that doesn't exist, key_any('a')
 function love.keypressed(name, num)
-    return input.event("key_"..name)
+    if input.keyboard_enabled then
+        return input.event("key_"..name)
+    end
 end
 
 function love.keyreleased(name, num)
-    return input.event("!key_"..name)
+    if input.keyboard_enabled then
+        return input.event("!key_"..name)
+    end
 end
 
 -- same as above, but for joysticks. Joystick events are parameterized by both
 -- stick and button; button 3 on stick 0 shows up as joy_0_button_3.
 function love.joystickpressed(j, b)
-    return input.event("joy_"..j.."_button_"..b, j, "button", b)
+    if input.controller_enabled then
+        return input.event("joy_"..j.."_button_"..b, j, "button", b)
+    end
 end
 
 function love.joystickreleased(j, b)
-    return input.event("!joy_"..j.."_button_"..b, j, "button", b)
+    if input.controller_enabled then
+        return input.event("!joy_"..j.."_button_"..b, j, "button", b)
+    end
 end
 
 -- joystick axis handling. At initialization, read the state of every axis on
@@ -124,6 +135,10 @@ end
 local _update = love.update
 function love.update(dt)
     _update(dt)
+
+    if not input.controller_enabled then
+        return
+    end
 
     -- scan joysticks
     for j,axes in ipairs(joysticks) do
