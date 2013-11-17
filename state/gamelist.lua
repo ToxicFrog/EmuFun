@@ -39,7 +39,13 @@ local kitten_mode = false
 local function kitten_toggle(self)
     kitten_mode = not kitten_mode
     input.keyboard_enabled = not kitten_mode
-    self.name = "Toggle Kitten Mode [%s]" % (kitten_mode and "ON" or "OFF")
+    self.name = "Kitten Mode [%s]" % (kitten_mode and "ON" or "OFF")
+end
+
+local function fullscreen_toggle(self)
+    emufun.config.fullscreen = not emufun.config.fullscreen
+    love.graphics.toggleFullscreen()
+    self.name = "Fullscreen [%s]" % (emufun.config.fullscreen and "ON" or "OFF")
 end
 
 local function menu()
@@ -50,7 +56,8 @@ local function menu()
         push(nil, nil, new "node.Menu" {
             name = "Main Menu";
             commands = {
-                { name = "Toggle Kitten Mode [%s]" % (kitten_mode and "ON" or "OFF"), run = kitten_toggle };
+                { name = "Fullscreen [%s]" % (emufun.config.fullscreen and "ON" or "OFF"), run = fullscreen_toggle };
+                { name = "Kitten Mode [%s]" % (kitten_mode and "ON" or "OFF"), run = kitten_toggle };
                 { name = "Quit EmuFun", run = emufun.quit };
             };
         })
