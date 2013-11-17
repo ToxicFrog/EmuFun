@@ -10,8 +10,13 @@ timer.start("IDLE")
 
 input = {}
 
+-- Keyboard input always starts enabled. Controller input is enabled
+-- only if at least one controller is present.
+-- TODO: Allow the user to force a rescan of controllers, so that
+-- controllers can be added and removed while emufun is running -
+-- assuming that the engine supports this.
 input.keyboard_enabled = true
-input.controller_enabled = true
+input.controller_enabled = love.joystick.getNumJoysticks() > 0
 
 -- event bindings
 local bindings = {}

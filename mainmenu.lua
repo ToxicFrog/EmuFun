@@ -12,16 +12,34 @@ end
 
 function ToggleSetting:run()
     self.value = not self.value
-    self.name = (self.basename .. " [%s]") % (self.value and "ON" or "OFF")
     self:apply()
+    self.name = (self.basename .. " [%s]") % (self.value and "ON" or "OFF")
     return 0
 end
 
-local kitten_toggle = ToggleSetting:new {
-    name = "Kitten Mode";
-    value = false;
+local keyboard_toggle = ToggleSetting:new {
+    name = "Keyboard Input";
+    value = input.keyboard_enabled;
     apply = function(self)
-        input.keyboard_enabled = not self.value
+        -- Don't let the user turn off the controller and keyboard at the same time.
+        if not self.value and not input.controller_enabled then
+          self.value = true
+        end
+        input.keyboard_enabled = self.value
+    end;
+}
+
+local controller_toggle = ToggleSetting:new {
+    name = "Controller Input";
+    value = input.controller_enabled;
+    apply = function(self)
+        -- Don't let the user turn off the controller and keyboard at the same time.
+        if not self.value and not input.keyboard_enabled then
+          self.value = true
+        end
+        -- Conversely, if we have no controllers, this can't be turned on.
+        self.value = self.value and love.joystick.getNumJoysticks() > 0
+        input.controller_enabled = self.value
     end;
 }
 
@@ -39,9 +57,8 @@ local fullscreen_toggle = ToggleSetting:new {
 emufun.menu = new "node.Menu" { name = "EmuFun";
     commands = {
         fullscreen_toggle;
-        kitten_toggle;
+        keyboard_toggle;
+        controller_toggle;
         new "node.Node" { name = "Quit EmuFun", run = emufun.quit, icon = emufun.images.nothing };
     };
 }
-
-print "created menu"

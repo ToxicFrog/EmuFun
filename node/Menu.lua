@@ -7,7 +7,7 @@ function Menu:__init(...)
     Node.__init(self, ...)
 
     for _,v in ipairs(self.commands) do
-      self:add(v)
+        self:add(v)
     end
 end
 
