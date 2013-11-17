@@ -34,9 +34,23 @@ local function contract()
     end
 end
 
+local kitten_mode = false
+
+local function kitten_toggle(self)
+    kitten_mode = not kitten_mode
+    input.keyboard_enabled = not kitten_mode
+    self.name = "Toggle Kitten Mode [%s]" % (kitten_mode and "ON" or "OFF")
+end
+
 local function menu()
     show()
     hidden = false
+
+    if view.icon ~= emufun.images.mainmenu then
+        push(nil, nil, new "node.Menu" ("Main Menu",
+            "Toggle Kitten Mode [%s]" % (kitten_mode and "ON" or "OFF"), kitten_toggle,
+            "Quit EmuFun", emufun.quit))
+    end
 end
 
 -- the user has selected an entry in the list
@@ -48,7 +62,7 @@ local function expand()
         for i=1,next[1] do
             contract()
         end
-    else
+    elseif #next > 0 then
         push(nil, nil, unpack(next))
     end
     love.event.clear()

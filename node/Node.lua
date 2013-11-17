@@ -1,11 +1,17 @@
 local Node = require "Object" :clone("node.Node")
 
-function Node:__init(name, parent)
+function Node:__init(name, parent, defaults)
     self.name = name
     self.filename = name
     self.parent = parent
     self.self = self
     self.icon = emufun.images.unknown
+
+    if defaults then
+        for k,v in pairs(defaults) do
+            self[k] = v
+        end
+    end
 
     self.r,self.g,self.b = 255, 255, 255
 end
@@ -17,17 +23,17 @@ function Node:__lt(rhs)
     return self._NAME < rhs._NAME
 end
 
-function Node:add(child)
+function Node:add(child, ...)
     if type(child) == "string" then
-        return self:add(Node:new(child, self))
+        return self:add(Node:new(child, self, ...))
     end
     
     table.insert(self, child)
     return child
 end
 
-function Node:add_command(name, fn)
-    local child = Node:new(name, self)
+function Node:add_command(name, fn, ...)
+    local child = Node:new(name, self, ...)
     
     function child:run()
         return fn(child) or 0

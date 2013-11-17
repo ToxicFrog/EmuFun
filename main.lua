@@ -54,5 +54,5 @@ function love.update(dt)
 end
 
 function emufun.quit()
-    love.event.quit()
+    os.exit(0)
 end
