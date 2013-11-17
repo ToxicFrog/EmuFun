@@ -3,10 +3,10 @@ local File = require "node.File"
 local Configuration = require "Configuration"
 local Directory = Node:clone("node.Directory")
 
-function Directory:__init(name, parent)
-	Node.__init(self, name, parent)
+Directory.icon = emufun.images.directory
 
-	self.icon = emufun.images.directory
+function Directory:__init(...)
+	Node.__init(self, ...)
 
     -- load configuration from disk, if present
     local cfg = new "Configuration" (self)
@@ -20,7 +20,7 @@ function Directory:run()
     self:populate()
 
     if #self == 0 then
-        return new "node.Message" (self.name, "Directory is empty!", self.parent)
+        return new "node.Message" { name = self.name, message = "Directory is empty!", parent = self.parent }
     end
 
     return self
@@ -46,9 +46,9 @@ function Directory:populate(...)
         -- create a node for it
         local node
         if lfs.attributes(self:path(item), "mode") == "directory" then
-            node = Directory:new(item, self)
+            node = new "node.Directory" { name = item, parent = self }
         else
-            node = File:new(item, self)
+            node = new "node.File" { name = item, parent = self }
         end
 
         if not node.hidden then

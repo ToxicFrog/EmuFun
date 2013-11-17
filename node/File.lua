@@ -1,10 +1,10 @@
 local Node = require "node.Node"
 local File = Node:clone("node.File")
 
-function File:__init(name, parent)
-    Node.__init(self, name, parent)
+File.icon = emufun.images.file
 
-    self.icon = emufun.images.file
+function File:__init(...)
+    Node.__init(self, ...)
 
     -- load configuration from disk, if present
     local cfg = new "Configuration" (self)
@@ -61,7 +61,7 @@ function File:run()
             end
             return rv
         else
-            return new "node.Message" ("Error executing commands for " .. self:path(), "Unknown command type " .. type(v))
+            return new "node.Message" { name = "Error executing commands for " .. self:path(), message = "Unknown command type " .. type(v), parent = self.parent }
         end
     end
 
@@ -80,7 +80,7 @@ function File:run()
         return rv
     end
     
-    return new "node.Message" ("Error!", "No configuration available to execute this file", self.parent)
+    return new "node.Message" { name = "Error!", message = "No configuration available to execute this file", parent = self.parent }
 end
 
 function File:dir()

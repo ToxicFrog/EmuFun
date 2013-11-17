@@ -1,12 +1,12 @@
 local Node = require "node.Node"
 local Message = Node:clone()
 
-function Message:__init(name, message, parent)
-    Node.__init(self, name, parent)
+Message.icon = emufun.images.error
 
-    self.icon = emufun.images.error
+function Message:__init(...)
+    Node.__init(self, ...)
 
-    self:add_command(message, function() return 1 end)
+    self:add_command { name = self.message, run = function() return 1 end }
 end
 
 return Message

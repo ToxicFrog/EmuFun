@@ -47,9 +47,13 @@ local function menu()
     hidden = false
 
     if view.icon ~= emufun.images.mainmenu then
-        push(nil, nil, new "node.Menu" ("Main Menu",
-            "Toggle Kitten Mode [%s]" % (kitten_mode and "ON" or "OFF"), kitten_toggle,
-            "Quit EmuFun", emufun.quit))
+        push(nil, nil, new "node.Menu" {
+            name = "Main Menu";
+            commands = {
+                { name = "Toggle Kitten Mode [%s]" % (kitten_mode and "ON" or "OFF"), run = kitten_toggle };
+                { name = "Quit EmuFun", run = emufun.quit };
+            };
+        })
     end
 end
 

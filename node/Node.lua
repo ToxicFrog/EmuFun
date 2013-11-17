@@ -1,18 +1,17 @@
 local Node = require "Object" :clone("node.Node")
 
-function Node:__init(name, parent, defaults)
-    self.name = name
-    self.filename = name
-    self.parent = parent
-    self.self = self
-    self.icon = emufun.images.unknown
+Node.icon = emufun.images.unknown
 
-    if defaults then
-        for k,v in pairs(defaults) do
+function Node:__init(props)
+    if props then
+        for k,v in pairs(props) do
             self[k] = v
         end
     end
 
+    assert(self.name, "Node created without a name")
+
+    self.filename = self.filename or self.name
     self.r,self.g,self.b = 255, 255, 255
 end
 
@@ -23,21 +22,20 @@ function Node:__lt(rhs)
     return self._NAME < rhs._NAME
 end
 
-function Node:add(child, ...)
+function Node:add(child)
     if type(child) == "string" then
-        return self:add(Node:new(child, self, ...))
+        return self:add(Node:new { name = child, parent = self })
     end
     
     table.insert(self, child)
     return child
 end
 
-function Node:add_command(name, fn, ...)
-    local child = Node:new(name, self, ...)
-    
-    function child:run()
-        return fn(child) or 0
-    end
+function Node:add_command(props)
+    local child = new "node.Node" (props)
+    local run = child.run
+
+    child.run = function(...) return run(...) or 0 end
     
     self:add(child)
 end
@@ -79,7 +77,7 @@ end
 
 function Node:run()
     -- return an error message
-    return new "node.Message" ("Error!", "This node doesn't support activation. Report this as a bug.", self.parent)
+    return new "node.Message" { name = "Error!", message = "This node doesn't support activation. Report this as a bug.", parent = self.parent }
 end
 
 function Node:populate() end
