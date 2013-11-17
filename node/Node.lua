@@ -30,7 +30,7 @@ function Node:add_command(name, fn)
     local child = Node:new(name, self)
     
     function child:run()
-        return fn(child) or child.parent
+        return fn(child) or 0
     end
     
     self:add(child)
