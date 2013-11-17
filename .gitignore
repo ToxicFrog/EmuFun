@@ -1,3 +1,5 @@
 release/
 raw_images/
 *.svg
+.build/
+*.sublime-*
