@@ -12,4 +12,6 @@ function Menu:__init(...)
     end
 end
 
+function Menu:sort() end
+
 return Menu
