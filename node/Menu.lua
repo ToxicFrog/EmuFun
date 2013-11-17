@@ -7,8 +7,7 @@ function Menu:__init(...)
     Node.__init(self, ...)
 
     for _,v in ipairs(self.commands) do
-      v.icon = v.icon or emufun.images.nothing
-      self:add_command(v)
+      self:add(v)
     end
 end
 
