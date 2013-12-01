@@ -17,6 +17,10 @@ local function pop()
     view = views[#views]
 end
 
+local function peek()
+    return views[#views]
+end
+
 local function prev()
     show()
     view:prev()
@@ -36,10 +40,19 @@ end
 
 require "mainmenu"
 
+local in_menu = false
 local function menu()
     show()
-    hidden = false
-    push(nil, nil, emufun.menu)
+    if not in_menu then
+        in_menu = peek()
+        hidden = false
+        push(nil, nil, emufun.menu)
+    else
+        while peek() ~= in_menu do
+            pop()
+        end
+        in_menu = false
+    end
 end
 
 -- the user has selected an entry in the list
