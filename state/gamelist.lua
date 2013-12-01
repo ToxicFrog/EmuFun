@@ -71,6 +71,11 @@ local function expand()
     timer.reset("IDLE")
 end
 
+local function reload()
+    contract()
+    expand()
+end
+
 local root, library = ...
 
 push(nil, nil, root)
@@ -81,6 +86,7 @@ input.bind("down", next)
 input.bind("left", contract)
 input.bind("right", expand)
 input.bind("menu", menu)
+input.bind("reload", reload)
 
 input.bind("IDLE", hide)
 

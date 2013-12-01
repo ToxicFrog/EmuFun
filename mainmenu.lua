@@ -54,8 +54,14 @@ local fullscreen_toggle = ToggleSetting:new {
     end;
 }
 
+local function reload()
+    input.event "menu" -- reload automatically closes the menu
+    input.event "reload"
+end
+
 emufun.menu = new "node.Menu" { name = "EmuFun";
     commands = {
+        new "node.Node" { name = "Reload Directory", run = reload; icon = emufun.images.nothing };
         fullscreen_toggle;
         keyboard_toggle;
         controller_toggle;
