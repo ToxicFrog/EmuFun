@@ -1,14 +1,10 @@
 emufun = {}
 
-function load(module)
-    return assert(love.filesystem.load(module..".lua"))()
-end
-
 require "lfs"
 
 function love.load()
-    load "util"
-    load "input"
+    require "util"
+    require "input"
 
     emufun.images = {}
     for _,file in ipairs(love.filesystem.enumerate "images") do
@@ -17,7 +13,7 @@ function love.load()
         end
     end
 
-    load "settings"
+    require "settings"
     
     -- if the user specified a resolution in emufun.cfg, we use that
     -- otherwise, we get a list of supported modes and use the highest-res one
