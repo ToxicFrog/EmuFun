@@ -17,7 +17,13 @@ root.icon = emufun.images.directory
 
 library = new "node.Node" { name = "Media Library", parent = root }
 library.icon = emufun.images.directory
-library.config = love.filesystem.load("library.cfg")
+
+local getfenv = getfenv
+local _config = emufun.config._library_config_fn
+function library:config()
+    return _config(getfenv())
+end
+
 function library:run()
     return unpack(self)
 end
