@@ -3,8 +3,7 @@
 -- all the functions that they can use
 
 local env = {}
-local Node = require "node.Node"
-local Configuration = Node:clone("Configuration")
+local Configuration = require("Object"):clone("Configuration")
 
 local function firstof(k, ...)
 	for _,t in ipairs {...} do
