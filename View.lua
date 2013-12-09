@@ -86,9 +86,9 @@ function love.graphics.safeprint(str, ...)
     local ok = pcall(love.graphics.print, str, ...)
     if ok then return end
 
-    print("Error displaying title: ", str)
+    LOG.ERROR("Error displaying title: %s", tostring(str))
     str = str:gsub("[^%w%s%p]", "?")
-    print("Falling back to:", str)
+    LOG.ERROR("Falling back to: %s", tostring(str))
     ok = pcall(love.graphics.print, str, ...)
     if ok then return end
 
