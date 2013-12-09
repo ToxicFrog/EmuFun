@@ -23,8 +23,13 @@ function love.load()
   -- Process command line. We do this after settings so emufun.cfg can be overriden by command line flags.
   init.argv()
 
+  -- Initialize log file.
+  if emufun.config.flags.log_file then
+    emufun._log = io.open(love.filesystem.getSaveDirectory().."/"..os.time()..".log", "a")
+  end
+
   for k,v in pairs(emufun.config) do
-    LOG.DEBUG("CFG", k,v)
+    LOG.DEBUG("CFG\t%s\t%s", tostring(k), tostring(v))
   end
 
   -- Load image files from disk.
@@ -74,7 +79,7 @@ function init.argv()
   end
 
   for k,v in pairs(emufun.config.flags) do
-    LOG.DEBUG("FLAG", k, v)
+    LOG.DEBUG("FLAG\t%s\t%s", tostring(k), tostring(v))
   end
 end
 

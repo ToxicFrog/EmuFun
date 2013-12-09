@@ -4,9 +4,9 @@
 if emufun.config.flags.write_user_config then
   love.filesystem.mkdir("config")
   for _,file in ipairs(love.filesystem.enumerate("default")) do
-    LOG.DEBUG("Checking configuration file:", file)
+    LOG.DEBUG("Checking configuration file: %s", file)
     if not love.filesystem.exists("config/"..file) or emufun.config.flags.overwrite_config then
-      LOG.INFO("Writing new configuration file to user settings directory:", file)
+      LOG.INFO("Writing new configuration file to user settings directory: %s", file)
       love.filesystem.write("config/"..file, love.filesystem.read("default/"..file))
     end
   end

@@ -6,7 +6,11 @@ setmetatable(LOG, LOG)
 function LOG:__call(level, ...)
   for i=level,#log_levels do
     if emufun.config.flags["log_"..log_levels[i]] then
-      print(log_levels[level]:upper(), ...)
+      print(log_levels[level]:upper(), string.format(...))
+      if emufun._log then
+        emufun._log:write(log_levels[level]:upper().."\t"..string.format(...).."\n")
+        emufun._log:flush()
+      end
       return
     end
   end
