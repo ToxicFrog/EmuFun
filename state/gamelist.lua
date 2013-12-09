@@ -2,23 +2,24 @@ local views = {}
 local view
 
 local visible
-local function hide() visible = false end
+local function hide() LOG.DEBUG("Blanking screen") visible = false end
 local function show() visible = true end
 
 local function push(icon, title, node, ...)
     show()
     table.insert(views, new "View" (icon or node.icon, title or node:path(), node, ...))
     view = views[#views]
+    LOG.DEBUG("Push: %s", view.title)
 end
 
 local function pop()
     show()
-    table.remove(views)
+    LOG.DEBUG("Pop: %s", table.remove(views).title)
     view = views[#views]
 end
 
-local function peek()
-    return views[#views]
+local function peek(n)
+    return views[#views - (n or 0)]
 end
 
 local function prev()
@@ -34,6 +35,7 @@ end
 local function contract()
     show()
     if #views > 1 then
+        LOG.DEBUG("Contract: %s -> %s", peek().title, peek(1).title)
         pop()
     end
 end
@@ -44,10 +46,12 @@ local in_menu = false
 local function menu()
     show()
     if not in_menu then
+        LOG.DEBUG("Showing menu")
         in_menu = peek()
         hidden = false
         push(nil, nil, emufun.menu)
     else
+        LOG.DEBUG("Hiding menu")
         while peek() ~= in_menu do
             pop()
         end
@@ -60,6 +64,7 @@ end
 -- or a number N indicating "go back N levels"
 local function expand()
     local next = { view:selected():run() }
+    LOG.DEBUG("Expand: %s -> %s", peek().title, view:selected().name)
     if type(next[1]) == "number" then
         for i=1,next[1] do
             contract()
