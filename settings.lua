@@ -1,35 +1,3 @@
--- create baked-in default configuration including command line flags
-emufun.config = {}
-emufun.config.flags = {
-  default_config = true;
-  user_config = true;
-  write_user_config = true;
-  overwrite_config = false;
-}
-
--- parse command line flags
-local function parse_flag(flag, pattern, value)
-  name = flag:match(pattern)
-  if name then
-    emufun.config.flags[name:gsub("-", "_")] = value
-    return true
-  end
-end
-
-for _,arg in pairs(arg) do
-  if not (parse_flag(arg, "^%+(%w)", false)
-          or parse_flag(arg, "^%-%-no%-(%S+)", false)
-          or parse_flag(arg, "^%-(%w)", true)
-          or parse_flag(arg, "^%-%-(%S+)", true))
-  then
-    table.insert(emufun.config.flags, flag)
-  end
-end
-
-for k,v in pairs(emufun.config.flags) do
-  LOG.DEBUG("FLAG", k, v)
-end
-
 -- Copy default configuration into user config dir, if we haven't already yet
 -- and if --write-user-config is still set.
 -- TODO: write blank files with default settings documented, let user override.
@@ -60,9 +28,3 @@ function emufun.load_config(name)
     setfenv(user, env)()
   end
 end
-
-emufun.load_config "emufun" (emufun.config)
-emufun.load_config "controls" (setmetatable({ emufun = emufun, love = love }, { __index = input }))
-
--- load library file type configuration for later use by library state
-emufun.config._library_config_fn = emufun.load_config "library"
