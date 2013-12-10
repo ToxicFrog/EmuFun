@@ -5,9 +5,9 @@ local visible
 local function hide() LOG.DEBUG("Blanking screen") visible = false end
 local function show() visible = true end
 
-local function push(icon, title, node, ...)
+local function push(node, ...)
     show()
-    table.insert(views, new "View" (icon or node.icon, title or node:path(), node, ...))
+    table.insert(views, new "View" (node.icon, node:path(), node, ...))
     view = views[#views]
     LOG.DEBUG("Push: %s", view.title)
 end
@@ -49,7 +49,7 @@ local function menu()
         LOG.DEBUG("Showing menu")
         in_menu = peek()
         hidden = false
-        push(nil, nil, emufun.menu)
+        push(emufun.menu)
     else
         LOG.DEBUG("Hiding menu")
         while peek() ~= in_menu do
@@ -70,7 +70,7 @@ local function expand()
             contract()
         end
     elseif #next > 0 then
-        push(nil, nil, unpack(next))
+        push(unpack(next))
     end
     love.event.clear()
     timer.reset("IDLE")
@@ -83,8 +83,8 @@ end
 
 local root, library = ...
 
-push(nil, nil, root)
-push(nil, nil, unpack(library))
+push(root)
+push(unpack(library))
 
 input.bind("up", prev)
 input.bind("down", next)
