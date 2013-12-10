@@ -65,4 +65,5 @@ function love.update(dt)
       end
     end
   end
+  _update(dt)
 end
