@@ -6,6 +6,9 @@
 ZIP=zip -db -dc -q
 UNZIP=unzip -q
 
+SRC=$(shell git ls-files | egrep -v ^examples/)
+BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+
 all: dirs love osx win32 win64
 love: release/emufun.love
 osx: release/emufun-osx.zip
@@ -18,7 +21,7 @@ dirs:
 clean:
 	rm -rf .build release
 
-release/emufun.love:
+release/emufun.love: ${SRC}
 	rm -f $@
 	git archive --format=zip --output=$@ HEAD
 
