@@ -1,35 +1,36 @@
 local views = {}
-local view
 
 local visible
-local function hide() LOG.DEBUG("Blanking screen") visible = false end
+local in_menu = false
+local function hide() visible = false end
 local function show() visible = true end
-
-local function push(node, ...)
-    show()
-    table.insert(views, new "View" (node.icon, node:path(), node, ...))
-    view = views[#views]
-    LOG.DEBUG("Push: %s", view.title)
-end
-
-local function pop()
-    show()
-    LOG.DEBUG("Pop: %s", table.remove(views).title)
-    view = views[#views]
-end
 
 local function peek(n)
     return views[#views - (n or 0)]
 end
 
+local function push(node, ...)
+    show()
+    table.insert(views, new "View" (node.icon, node:path(), node, ...))
+    LOG.DEBUG("Push: %s", peek().title)
+end
+
+local function pop()
+    show()
+    LOG.DEBUG("Pop: %s", table.remove(views).title)
+    if peek() == in_menu then
+        in_menu = false
+    end
+end
+
 local function prev()
     show()
-    view:prev()
+    peek():prev()
 end
 
 local function next()
     show()
-    view:next()
+    peek():next()
 end
 
 local function contract()
@@ -42,20 +43,15 @@ end
 
 require "mainmenu"
 
-local in_menu = false
 local function menu()
     show()
     if not in_menu then
         LOG.DEBUG("Showing menu")
         in_menu = peek()
-        hidden = false
         push(emufun.menu)
     else
         LOG.DEBUG("Hiding menu")
-        while peek() ~= in_menu do
-            pop()
-        end
-        in_menu = false
+        while in_menu do pop() end
     end
 end
 
@@ -63,8 +59,8 @@ end
 -- the corresponding node's :run() method will return the target nodes,
 -- or a number N indicating "go back N levels"
 local function expand()
-    local next = { view:selected():run() }
-    LOG.DEBUG("Expand: %s -> %s", peek().title, view:selected().name)
+    local next = { peek():selected():run() }
+    LOG.DEBUG("Expand: %s -> %s", peek().title, peek():selected().name)
     if type(next[1]) == "number" then
         for i=1,next[1] do
             contract()
@@ -100,6 +96,6 @@ input.setRepeat("down", 0.5, 0.1)
 
 function love.draw()
     if visible then
-        view:draw()
+        peek():draw()
     end
 end
