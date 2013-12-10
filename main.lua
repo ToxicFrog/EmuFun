@@ -11,6 +11,9 @@ require "lfs"
 local init = {}
 
 function love.load()
+  -- Process command line. Some flags affect library loading and config file reading.
+  init.argv()
+
   -- Load the LOG functions. They won't do anything until enabled by the user settings or command line.
   require "util"
   require "logging"
@@ -20,8 +23,12 @@ function love.load()
   -- Load settings library and user settings file.
   emufun.load_config "emufun" (emufun.config)
 
-  -- Process command line. We do this after settings so emufun.cfg can be overriden by command line flags.
+  -- Process command line *again*. This allows command line flags to override config file contents.
   init.argv()
+
+  for k,v in pairs(emufun.config.flags) do
+    LOG.DEBUG("FLAG\t%s\t%s", tostring(k), tostring(v))
+  end
 
   -- Initialize log file.
   if emufun.config.flags.log_file then
@@ -76,10 +83,6 @@ function init.argv()
     then
       table.insert(emufun.config.flags, flag)
     end
-  end
-
-  for k,v in pairs(emufun.config.flags) do
-    LOG.DEBUG("FLAG\t%s\t%s", tostring(k), tostring(v))
   end
 end
 
