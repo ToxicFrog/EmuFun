@@ -44,8 +44,9 @@ end
 require "mainmenu"
 
 local function menu()
-    show()
-    if not in_menu then
+    if not visible then
+        show()
+    elseif not in_menu then
         LOG.DEBUG("Showing menu")
         in_menu = peek()
         push(emufun.menu)
