@@ -66,5 +66,6 @@ emufun.menu = new "node.Menu" { name = "EmuFun";
         keyboard_toggle;
         controller_toggle;
         new "node.Node" { name = "Quit EmuFun", run = emufun.quit, icon = emufun.images.nothing };
+        new "node.Node" { name = "[DEBUG] Throw Error", run = function() error "User Forced Error" end, icon = emufun.images.error };
     };
 }
