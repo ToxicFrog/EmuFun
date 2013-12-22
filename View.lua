@@ -98,9 +98,10 @@ end
 -- draw this node with an optional colour mask
 function View:drawNode(node, r, g, b)
     local min = math.min
-    r = r and min(r, node.r) or node.r
-    g = g and min(g, node.g) or node.g
-    b = b and min(b, node.b) or node.b
+    local _r,_g,_b  = node:colour()
+    r = r and min(r, _r) or _r
+    g = g and min(g, _g) or _g
+    b = b and min(b, _b) or _b
     love.graphics.setColor(r,g,b)
     love.graphics.draw(node.icon, LH, 0, 0, LH/node.icon:getWidth(), LH/node.icon:getHeight())
     love.graphics.safeprint(node.name, 2*LH+2, 0)

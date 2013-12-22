@@ -12,7 +12,10 @@ function Node:__init(props)
     assert(self.name, "Node created without a name")
 
     self.filename = self.filename or self.name
-    self.r,self.g,self.b = 255, 255, 255
+end
+
+function Node:colour()
+    return 255, 255, 255
 end
 
 function Node:__lt(rhs)

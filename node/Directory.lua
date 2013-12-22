@@ -1,3 +1,4 @@
+local cache = require "cache"
 local Node = require "node.Node"
 local File = require "node.File"
 local Configuration = require "Configuration"
@@ -13,6 +14,16 @@ function Directory:__init(...)
     self:loadConfig()
 	self:configure(cfg)
     cfg:finalize()
+
+    -- load cache data
+    self.metadata = lfs.attributes(self:path())
+    if self.metadata then
+        self.cache = cache.get(self:path())
+        if self.metadata.modification ~= self.cache.ts then
+            self.cache.ts = self.metadata.modification
+            cache.save()
+        end
+    end
 end
 
 function Directory:run()

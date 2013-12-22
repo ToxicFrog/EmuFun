@@ -1,3 +1,4 @@
+local cache = require "cache"
 local Node = require "node.Node"
 local File = Node:clone("node.File")
 
@@ -11,6 +12,22 @@ function File:__init(...)
     self:loadConfig()
     self:configure(cfg)
     cfg:finalize()
+
+    -- load cache data
+    self.metadata = lfs.attributes(self:path())
+    self.cache = cache.get(self:path())
+    if self.metadata.modification ~= self.cache.ts then
+        self.cache.ts = self.metadata.modification
+        cache.save()
+    end
+end
+
+function File:colour()
+    if self.cache.flags.seen then
+        return 0, 192, 255
+    else
+        return Node.colour(self)
+    end
 end
 
 function File:loadConfig()
@@ -73,6 +90,11 @@ function File:run()
         end
 
         local rv = exec(self.execute) or 0
+
+        if not self.cache.flags.seen then
+            self.cache.flags.seen = true
+            cache.save()
+        end
 
         if emufun.config.fullscreen then
             love.graphics.toggleFullscreen()
