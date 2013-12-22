@@ -61,6 +61,12 @@ function love.update(dt)
   love.timer.sleep(1/30 - dt)
 end
 
+local _errhand = love.errhand
+function love.errhand(...)
+  LOG.ERROR("Error: %s", debug.traceback((...)))
+  return _errhand(...)
+end
+
 function emufun.quit()
   os.exit(0)
 end
