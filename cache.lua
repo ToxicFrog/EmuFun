@@ -27,7 +27,10 @@ function cache.save()
     fd:write("%d\t%s\t%s\n" % { data.ts, table.concat(flags, ":"), path })
   end
   fd:close()
-  os.rename(CACHE_PATH..".tmp", CACHE_PATH)
+  local res,err = os.rename(CACHE_PATH..".tmp", CACHE_PATH)
+  if not res then
+    LOG.ERROR("Cache save failed: %s", tostring(err))
+  end
 end
 
 function cache.get(path)
