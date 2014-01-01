@@ -17,6 +17,7 @@ function File:__init(...)
     self.metadata = lfs.attributes(self:path())
     self.cache = cache.get(self:path())
     if self.metadata.modification ~= self.cache.ts then
+        LOG.DEBUG("File '%s' updated (%d ~= %d), updating cache", self:path(), self.metadata.modification, self.cache.ts)
         self.cache.ts = self.metadata.modification
         cache.save()
     end

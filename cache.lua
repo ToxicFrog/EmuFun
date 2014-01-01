@@ -6,9 +6,10 @@ local CACHE_PATH = love.filesystem.getSaveDirectory().."/cache"
 -- cache format
 -- TS\tFLAGS\tPATH\n
 function cache.load()
+  LOG.INFO("Loading cache...")
   for line in io.lines(CACHE_PATH) do
     local ts,flags,path = line:match("(%d+)\t(%w*)\t(.*)")
-    _cache[path] = { ts = ts, flags = {} }
+    _cache[path] = { ts = tonumber(ts), flags = {} }
     for flag in flags:gmatch("[^:]+") do
       _cache[path].flags[flag] = true
     end
@@ -16,6 +17,7 @@ function cache.load()
 end
 
 function cache.save()
+  LOG.INFO("Saving cache...")
   local fd = io.open(CACHE_PATH..".tmp", "wb")
   for path,data in pairs(_cache) do
     local flags = {}
