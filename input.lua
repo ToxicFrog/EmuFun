@@ -21,9 +21,17 @@ input.controller_enabled = love.joystick.getNumJoysticks() > 0
 -- event bindings
 local bindings = {}
 
+-- window focus status
+local focus = true
+function love.focus(f)
+    focus = f
+end
+
 -- Dispatch an event with the given names and arguments.
 -- Returns true if an event handler existed, false otherwise
 function input.event(name, ...)
+    -- silently disregard all events if not focused
+    if not focus then return end
     timer.reset("IDLE")
 
     if name:sub(1,1) == "!" then
