@@ -35,6 +35,14 @@ function Directory:colour()
     end
 end
 
+function Directory:walk(f)
+    -- Force directory contents population
+    if #self == 0 then
+        self:populate()
+    end
+    return Node.walk(self, f)
+end
+
 function Directory:run()
     -- "running" a directory just populates it and CDs into it
     self:populate()

@@ -85,6 +85,15 @@ local function toggle_seen()
     cache.save()
 end
 
+local function toggle_seen_recursive()
+    local node = peek():selected()
+    local seen = not node.cache.flags.seen
+    node:walk(function(self)
+        self.cache.flags.seen = seen
+    end)
+    cache.save()
+end
+
 local root, library = ...
 
 push(root)
@@ -97,6 +106,7 @@ input.bind("right", expand)
 input.bind("menu", menu)
 input.bind("reload", reload)
 input.bind("toggle-seen", toggle_seen)
+input.bind("toggle-seen-recursive", toggle_seen_recursive)
 
 input.bind("IDLE", hide)
 

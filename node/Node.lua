@@ -29,7 +29,7 @@ function Node:add(child)
     if type(child) == "string" then
         return self:add(Node:new { name = child, parent = self })
     end
-    
+
     table.insert(self, child)
     return child
 end
@@ -39,7 +39,7 @@ function Node:add_command(props)
     local run = child.run
 
     child.run = function(...) return run(...) or 0 end
-    
+
     self:add(child)
 end
 
@@ -76,6 +76,13 @@ function Node:configure(cfg)
     end
 
     cfg:add(self.config)
+end
+
+function Node:walk(f)
+    for child in self:children() do
+        f(child)
+    end
+    return f(self)
 end
 
 function Node:run()

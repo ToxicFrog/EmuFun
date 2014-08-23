@@ -59,6 +59,11 @@ local function toggle_seen()
     input.event "toggle-seen"
 end
 
+local function toggle_seen_recursive()
+    input.event "menu"
+    input.event "toggle-seen-recursive"
+end
+
 local function reload()
     input.event "menu" -- reload automatically closes the menu
     input.event "reload"
@@ -67,7 +72,8 @@ end
 emufun.menu = new "node.Menu" { name = "EmuFun";
     commands = {
         new "node.Node" { name = "Reload Directory", run = reload; icon = emufun.images.nothing };
-        new "node.Node" { name = "Toggle Seen", run = toggle_seen; icon = emufun.images.nothing };
+        new "node.Node" { name = "Toggle Seen (this only)", run = toggle_seen; icon = emufun.images.nothing };
+        new "node.Node" { name = "Toggle Seen (this and children)", run = toggle_seen_recursive; icon = emufun.images.nothing };
         fullscreen_toggle;
         keyboard_toggle;
         controller_toggle;
