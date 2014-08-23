@@ -27,6 +27,14 @@ function Directory:__init(...)
     end
 end
 
+function Directory:colour()
+    if self.cache.flags.seen then
+        return 0, 192, 255
+    else
+        return Node.colour(self)
+    end
+end
+
 function Directory:run()
     -- "running" a directory just populates it and CDs into it
     self:populate()
@@ -53,7 +61,7 @@ function Directory:populate(...)
     for i=1,#self do
         self[i] = nil
     end
-    
+
     for item in lfs.dir(self:path()) do
         -- create a node for it
         local node
@@ -67,7 +75,7 @@ function Directory:populate(...)
             self:add(node)
         end
     end
-    
+
     self:sort()
 end
 

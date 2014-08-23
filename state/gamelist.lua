@@ -42,6 +42,7 @@ local function contract()
 end
 
 require "mainmenu"
+local cache = require "cache"
 
 local function menu()
     if not visible then
@@ -78,6 +79,12 @@ local function reload()
     expand()
 end
 
+local function toggle_seen()
+    local node = peek():selected()
+    node.cache.flags.seen = not node.cache.flags.seen
+    cache.save()
+end
+
 local root, library = ...
 
 push(root)
@@ -89,6 +96,7 @@ input.bind("left", contract)
 input.bind("right", expand)
 input.bind("menu", menu)
 input.bind("reload", reload)
+input.bind("toggle-seen", toggle_seen)
 
 input.bind("IDLE", hide)
 
