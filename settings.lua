@@ -22,7 +22,7 @@ function emufun.initConfig()
   if not lfs.exists(config_dir) then
     assert(lfs.mkdir(config_dir))
   end
-  for _,file in ipairs(love.filesystem.enumerate("default")) do
+  for _,file in ipairs(love.filesystem.getDirectoryItems("default")) do
     local path = "%s/%s" % { config_dir, file }
     LOG.DEBUG("Checking configuration file: %s", path)
     if emufun.config.flags.overwrite_config or not lfs.exists(path) then

@@ -38,7 +38,7 @@ local controller_toggle = ToggleSetting:new {
           self.value = true
         end
         -- Conversely, if we have no controllers, this can't be turned on.
-        self.value = self.value and love.joystick.getNumJoysticks() > 0
+        self.value = self.value and love.joystick.getJoystickCount() > 0
         input.controller_enabled = self.value
     end;
 }
@@ -48,7 +48,7 @@ local fullscreen_toggle = ToggleSetting:new {
     value = emufun.config.fullscreen;
     apply = function(self)
         if emufun.config.fullscreen ~= self.value then
-            love.graphics.toggleFullscreen()
+            love.window.toggleFullscreen()
         end
         emufun.config.fullscreen = self.value
     end;

@@ -2,6 +2,7 @@ emufun = {
   config = { flags = {} };
 }
 
+package.cpath = package.cpath..";/usr/lib64/lua/5.1/?.so"
 require "lfs"
 
 local init = {}
@@ -108,7 +109,7 @@ end
 
 function init.images()
   emufun.images = {}
-  for _,file in ipairs(love.filesystem.enumerate "images") do
+  for _,file in ipairs(love.filesystem.getDirectoryItems "images") do
     if file:match("%.png$") then
       emufun.images[file:sub(1,-5)] = love.graphics.newImage("images/" .. file)
     end
@@ -117,26 +118,25 @@ end
 
 function init.graphics()
   -- if the user specified a resolution in emufun.cfg, we use that
-  -- otherwise, we get a list of supported modes and use the highest-res one
-  -- in this modern age of LCDs, this is usually the same resolution that
-  -- the user's desktop is at, thus minimizing disruption
+  -- otherwise, conf.lua has already set things up for us properly: borderless
+  -- fullscreen at desktop resolution.
   if emufun.config.fullscreen == nil then
       emufun.config.fullscreen = true
   end
   if emufun.config.width and emufun.config.height then
-      love.graphics.setMode(emufun.config.width, emufun.config.height, emufun.config.fullscreen)
+      love.window.setMode(emufun.config.width, emufun.config.height, {
+        fullscreen = emufun.config.fullscreen;
+        -- "desktop" doesn't work if the user wants a resolution other than desktop res
+        -- and if they *did* want that, they just need to leave things at the defaults
+        fullscreentype = "normal";
+      })
   else
-    local modes = love.graphics.getModes()
-    table.sort(modes, function(x,y) return x.width > y.width or (x.width == y.width and x.height > y.height) end)
-
-    emufun.config.width = modes[1].width
-    emufun.config.height = modes[1].height
-    love.graphics.setMode(modes[1].width, modes[1].height, emufun.config.fullscreen)
+    emufun.config.width,emufun.config.height = love.graphics.getDimensions()
+    emufun.config.fullscreen = false -- borderless doesn't require toggleFullscreen()
   end
 
   --love.graphics.setFont("LiberationMono-Bold.ttf", 24)
   love.graphics.setNewFont(math.floor(emufun.config.height/emufun.config.lines) - 8)
   love.graphics.setBackgroundColor(0, 0, 0)
-  love.graphics.setCaption("EmuFun")
   love.mouse.setVisible(false)
 end

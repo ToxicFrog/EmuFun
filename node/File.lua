@@ -87,7 +87,7 @@ function File:run()
     -- if not, we fall through to the error
     if self.execute then
         if emufun.config.fullscreen then
-            love.graphics.toggleFullscreen()
+            love.window.toggleFullscreen()
         end
 
         local rv = exec(self.execute) or 0
@@ -98,7 +98,7 @@ function File:run()
         end
 
         if emufun.config.fullscreen then
-            love.graphics.toggleFullscreen()
+            love.window.toggleFullscreen()
         end
         return rv
     end

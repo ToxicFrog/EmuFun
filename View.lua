@@ -57,7 +57,7 @@ function View:draw()
             atLine(i)
             if index == self.index then
                 self:drawNode(node, 128, 255, 128)
-                lg.triangle("fill",
+                lg.polygon("fill",
                     padding, padding,
                     padding, LH-padding,
                     LH-padding, half)

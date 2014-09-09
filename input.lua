@@ -16,7 +16,7 @@ input = {}
 -- controllers can be added and removed while emufun is running -
 -- assuming that the engine supports this.
 input.keyboard_enabled = true
-input.controller_enabled = love.joystick.getNumJoysticks() > 0
+input.controller_enabled = love.joystick.getJoystickCount() > 0
 
 -- event bindings
 local bindings = {}
@@ -102,13 +102,13 @@ end
 -- stick and button; button 3 on stick 0 shows up as joy_0_button_3.
 function love.joystickpressed(j, b)
     if input.controller_enabled then
-        return input.event("joy_"..j.."_button_"..b, j, "button", b)
+        return input.event("joy_"..j:getID().."_button_"..b, j, "button", b)
     end
 end
 
 function love.joystickreleased(j, b)
     if input.controller_enabled then
-        return input.event("!joy_"..j.."_button_"..b, j, "button", b)
+        return input.event("!joy_"..j:getID().."_button_"..b, j, "button", b)
     end
 end
 
@@ -127,9 +127,9 @@ local function readJoystick(j)
         end
     end
 
-    local axes = { hats = {}; love.joystick.getAxes(j) }
-    for i=1,love.joystick.getNumHats(j) do
-        axes.hats[i] = love.joystick.getHat(j, i)
+    local axes = { hats = {}; j:getAxes() }
+    for h=1,j:getHatCount() do
+        axes.hats[h] = j:getHat(h)
     end
     for a=1,#axes do
         axes[a] = dir(axes[a])
@@ -139,8 +139,8 @@ local function readJoystick(j)
 end
 
 local joysticks = {}
-for joy=1,love.joystick.getNumJoysticks() do
-    joysticks[joy] = readJoystick(joy)
+for _,stick in ipairs(love.joystick.getJoysticks()) do
+    joysticks[stick:getID()] = readJoystick(stick)
 end
 
 -- Every frame, scan joystick axes, compare them to the previous frame, and
@@ -154,8 +154,9 @@ function love.update(dt)
     end
 
     -- scan joysticks
-    for j,axes in ipairs(joysticks) do
-        new_axes = readJoystick(j)
+    for _,stick in ipairs(love.joystick.getJoysticks()) do
+        axes = joysticks[stick:getID()]
+        new_axes = readJoystick(stick)
 
         -- check hats
         for h,ndir in ipairs(new_axes.hats) do
@@ -176,7 +177,6 @@ function love.update(dt)
             end
         end
 
-        -- store results
-        joysticks[j] = new_axes
+        joysticks[stick:getID()] = new_axes
     end
 end
