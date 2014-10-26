@@ -10,6 +10,12 @@ require "lfs"
 
 local init = {}
 
+function state(name)
+    return function(...)
+        return love.filesystem.load("state/" .. name .. ".lua")(...)
+    end
+end
+
 function love.load()
   -- Process command line. Some flags affect library loading and config file reading.
   init.argv()
@@ -119,7 +125,7 @@ function init.graphics()
     emufun.config.height = modes[1].height
     love.graphics.setMode(modes[1].width, modes[1].height, emufun.config.fullscreen)
   end
-  
+
   --love.graphics.setFont("LiberationMono-Bold.ttf", 24)
   love.graphics.setNewFont(math.floor(emufun.config.height/emufun.config.lines) - 8)
   love.graphics.setBackgroundColor(0, 0, 0)
