@@ -10,8 +10,13 @@ function cache.load()
   for line in io.lines(CACHE_PATH) do
     local ts,flags,path = line:match("(%d+)\t(%w*)\t(.*)")
     _cache[path] = { ts = tonumber(ts), flags = {} }
-    for flag in flags:gmatch("[^:]+") do
-      _cache[path].flags[flag] = true
+    for flag in flags:gmatch("[^,]+") do
+      local k,v = flag:match("^([^:]+):(.*)")
+      if k then
+        _cache[path].flags[k] = v
+      else
+        _cache[path].flags[flag] = true
+      end
     end
   end
 end
