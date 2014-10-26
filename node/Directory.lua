@@ -24,6 +24,9 @@ function Directory:__init(...)
             self.cache.ts = self.metadata.modification
             cache.save()
         end
+    else
+        LOG.WARNING("Unable to stat() %s", self:path())
+        self.cache = { flags = {}, ts = 0 }
     end
 end
 

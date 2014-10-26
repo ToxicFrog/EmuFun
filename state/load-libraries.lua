@@ -19,8 +19,11 @@ function root:config()
     return _config(getfenv())
 end
 
-local library = new "node.Node" { name = "Media Library", parent = root }
-library.icon = emufun.images.directory
+local library = new "node.Node" {
+    name = "Media Library";
+    parent = root;
+    icon = emufun.images.directory;
+}
 
 function library:run()
     return unpack(self)
@@ -31,10 +34,13 @@ end
 
 root:add(library)
 
-local configs = new "node.Directory" { name = "Configuration Files", parent = root }
-function configs:path(name)
-    return love.filesystem.getSaveDirectory().."/config/"..(name or "")
-end
+local configs = new "node.Directory" {
+    name = "Emufun Configuration";
+    parent = root;
+    path = function(self, name)
+        return love.filesystem.getSaveDirectory().."/config/"..(name or "");
+    end;
+}
 
 -- TODO: add a "text" file type, with appropriate default editor and icon, and
 -- add a library rule for editing files of that type.
