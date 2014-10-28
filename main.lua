@@ -1,10 +1,6 @@
-emufun = { config = { flags = {
-  -- default command line flag settings
-  default_config = true;
-  user_config = true;
-  write_user_config = true;
-  overwrite_config = false;
-}}}
+emufun = {
+  config = { flags = {} };
+}
 
 require "lfs"
 
@@ -17,24 +13,50 @@ function state(name)
 end
 
 function love.load()
-  -- Process command line. Some flags affect library loading and config file reading.
-  init.argv()
+  local r,err = xpcall(init.init, debug.traceback)
+  if not r then
+    print(err)
+    os.exit(1)
+  end
+end
 
-  -- Load the LOG functions. They won't do anything until enabled by the user settings or command line.
+function init.init()
+  -- We need to load all the libraries first so that they can register their
+  -- command line flags.
   require "util"
   require "logging"
   require "input"
   require "settings"
 
-  -- Load settings library and user settings file.
-  emufun.load_config "emufun" (emufun.config)
+  flags.register("help", "h", "?") { help = "This text." }
 
-  -- Process command line *again*. This allows command line flags to override config file contents.
+  -- Then we parse the command line the first time around.
+  flags.parse(unpack(arg))
+  init.argv()
+
+  -- If the user asked for help, we bail here.
+  if emufun.config.flags.help then
+    flags.help()
+    os.exit(0)
+  end
+
+  -- Then we initialize the settings library (which writes default configuration
+  -- files, if they don't already exist and this behaviour hasn't been suppressed
+  -- with command line options) and then load the user configuration.
+  emufun.initConfig()
+  emufun.loadConfig "emufun" (emufun.config)
+
+  -- Loading the user configuration may have overwritten the command line flags,
+  -- so we parse the command line *again*, giving command line flags precedence
+  -- over the user configuration file.
   init.argv()
 
   for k,v in pairs(emufun.config.flags) do
     LOG.DEBUG("FLAG\t%s\t%s", tostring(k), tostring(v))
   end
+
+  -- Now we are done processing the main user config and the command line flags
+  -- and can continue with initialization.
 
   -- Initialize log file.
   if emufun.config.flags.log_file then
@@ -49,10 +71,10 @@ function love.load()
   init.images()
 
   -- Load user control settings.
-  emufun.load_config "controls" (setmetatable({ emufun = emufun, love = love }, { __index = input }))
+  emufun.loadConfig "controls" (setmetatable({ emufun = emufun, love = love }, { __index = input }))
 
   -- Load top-level library configuration (file types, etc).
-  emufun.config._library_config_fn = emufun.load_config "library"
+  emufun.config._library_config_fn = emufun.loadConfig "library"
 
   -- Initialize screen.
   init.graphics()
@@ -78,24 +100,10 @@ function emufun.quit()
 end
 
 function init.argv()
-  -- parse command line flags
-  local function parse_flag(flag, pattern, value)
-    name = flag:match(pattern)
-    if name then
-      emufun.config.flags[name:gsub("-", "_")] = value
-      return true
-    end
-  end
-
-  for _,arg in pairs(arg) do
-    if not (parse_flag(arg, "^%+(%w)", false)
-            or parse_flag(arg, "^%-%-no%-(%S+)", false)
-            or parse_flag(arg, "^%-(%w)", true)
-            or parse_flag(arg, "^%-%-(%S+)", true))
-    then
-      table.insert(emufun.config.flags, flag)
-    end
-  end
+  -- Parse command line flags. Flags from argv overwrite anything already present.
+  table.merge(emufun.config.flags, flags.parsed)
+  -- Flags from the default settings are only taken if nothing has overridden them.
+  table.merge(emufun.config.flags, flags.defaults, "ignore")
 end
 
 function init.images()
