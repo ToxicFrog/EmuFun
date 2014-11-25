@@ -70,7 +70,8 @@ function File:run()
             return v(self)
         elseif type(v) == "string" then
             local cmd = self:expandcommand(v)
-            os.execute(cmd)
+            LOG.INFO("Executing command: %s", cmd)
+            LOG.DEBUG("  => %s", tostring(os.execute(cmd)))
             return false
         elseif type(v) == "table" then
             local rv
@@ -102,7 +103,7 @@ function File:run()
         end
         return rv
     end
-    
+
     return new "node.Message" { name = "Error!", message = "No configuration available to execute this file", parent = self.parent }
 end
 
