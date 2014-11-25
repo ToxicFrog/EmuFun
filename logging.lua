@@ -33,6 +33,7 @@ function LOG.init()
       lfs.rmkdir(lfs.dirname(file))
     end
     _log = io.open(file, "a")
+    LOG.INFO("Opened log file '%s'", file)
   end
 end
 
