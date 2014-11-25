@@ -20,7 +20,7 @@ function emufun.initConfig()
   -- already. If --overwrite-config set, do this even if we already have.
   local config_dir = emufun.config.flags.config_dir
   if not lfs.exists(config_dir) then
-    assert(lfs.mkdir(config_dir))
+    assert(lfs.rmkdir(config_dir))
   end
   for _,file in ipairs(love.filesystem.getDirectoryItems("default")) do
     local path = "%s/%s" % { config_dir, file }
