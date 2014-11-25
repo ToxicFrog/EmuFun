@@ -14,21 +14,17 @@ function state(name)
 end
 
 function love.load()
-  local r,err = xpcall(init.init, debug.traceback)
-  if not r then
-    print(err)
-    os.exit(1)
-  end
-end
-
-function init.init()
   -- We need to load all the libraries first so that they can register their
-  -- command line flags.
+  -- command line flags, and so that logging functions are available.
   require "util"
   require "logging"
   require "input"
   require "settings"
 
+  init.init()
+end
+
+function init.init()
   flags.register("help", "h", "?") { help = "This text." }
 
   -- Then we parse the command line the first time around.
@@ -52,17 +48,16 @@ function init.init()
   -- over the user configuration file.
   init.argv()
 
+  -- At this point we finally know what the log file is named, if anything, so
+  -- we open it.
+  LOG.init()
+
   for k,v in pairs(emufun.config.flags) do
     LOG.DEBUG("FLAG\t%s\t%s", tostring(k), tostring(v))
   end
 
   -- Now we are done processing the main user config and the command line flags
   -- and can continue with initialization.
-
-  -- Initialize log file.
-  if emufun.config.flags.log_file then
-    emufun._log = io.open(love.filesystem.getSaveDirectory().."/"..os.time()..".log", "a")
-  end
 
   for k,v in pairs(emufun.config) do
     LOG.DEBUG("CFG\t%s\t%s", tostring(k), tostring(v))
