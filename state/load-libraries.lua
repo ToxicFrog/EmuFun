@@ -5,7 +5,10 @@ local function liberror(message)
     local node = new "node.Node" { name = message }
     node.icon = emufun.images.error
 
-    node:add_command("Quit EmuFun", emufun.quit)
+    node:add_command {
+        name = "Quit Emufun";
+        run = emufun.quit;
+    }
 
     return node
 end
