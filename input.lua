@@ -103,12 +103,14 @@ end
 function love.joystickpressed(j, b)
     if input.controller_enabled then
         return input.event("joy_"..j:getID().."_button_"..b, j, "button", b)
+            or input.event("joy_*_button_*", j, "button", b)
     end
 end
 
 function love.joystickreleased(j, b)
     if input.controller_enabled then
         return input.event("!joy_"..j:getID().."_button_"..b, j, "button", b)
+            or input.event("!joy_*_button_*", j, "button", b)
     end
 end
 
@@ -155,7 +157,8 @@ function love.update(dt)
 
     -- scan joysticks
     for _,stick in ipairs(love.joystick.getJoysticks()) do
-        axes = joysticks[stick:getID()]
+        local j = stick:getID()
+        axes = joysticks[j]
         new_axes = readJoystick(stick)
 
         -- check hats
@@ -163,8 +166,12 @@ function love.update(dt)
             -- hat has moved since last time
             local dir = axes.hats[h]
             if ndir ~= dir then
-                input.event("!joy_"..j.."_hat_"..h.."_"..dir, j, "hat", h, dir)
-                input.event("joy_"..j.."_hat_"..h.."_"..ndir, j, "hat", h, ndir)
+                if not input.event("!joy_"..j.."_hat_"..h.."_"..dir, j, "hat", h, dir) then
+                    input.event("!joy_*_hat_*_"..dir, j, "hat", h, dir)
+                end
+                if not input.event("joy_"..j.."_hat_"..h.."_"..ndir, j, "hat", h, ndir) then
+                    input.event("joy_*_hat_*_"..ndir, j, "hat", h, ndir)
+                end
             end
         end
 
