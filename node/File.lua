@@ -87,9 +87,9 @@ function File:run()
     -- the configuration file should define a command to execute
     -- if not, we fall through to the error
     if self.execute then
-        if emufun.config.fullscreen then
-            love.window.toggleFullscreen()
-        end
+        local fs = love.window.getFullscreen()
+
+        love.window.setFullscreen(false)
 
         local rv = exec(self.execute) or 0
 
@@ -98,9 +98,8 @@ function File:run()
             cache.save()
         end
 
-        if emufun.config.fullscreen then
-            love.window.toggleFullscreen()
-        end
+        love.window.setFullscreen(fs)
+
         return rv
     end
 
