@@ -1,5 +1,5 @@
 emufun = {
-  config = { flags = {} };
+  config = {};
 }
 
 package.cpath = package.cpath..";/usr/lib64/lua/5.1/?.so"
@@ -32,7 +32,7 @@ function init.init()
   init.argv()
 
   -- If the user asked for help, we bail here.
-  if emufun.config.flags.help then
+  if emufun.config.help then
     flags.help()
     os.exit(0)
   end
@@ -52,7 +52,7 @@ function init.init()
   -- we open it.
   log.init()
 
-  for k,v in pairs(emufun.config.flags) do
+  for k,v in pairs(flags.parsed) do
     log.debug("FLAG\t%s\t%s", tostring(k), tostring(v))
   end
 
@@ -97,9 +97,9 @@ end
 
 function init.argv()
   -- Parse command line flags. Flags from argv overwrite anything already present.
-  table.merge(emufun.config.flags, flags.parsed)
+  table.merge(emufun.config, flags.parsed)
   -- Flags from the default settings are only taken if nothing has overridden them.
-  table.merge(emufun.config.flags, flags.defaults, "ignore")
+  table.merge(emufun.config, flags.defaults, "ignore")
 end
 
 function init.images()
