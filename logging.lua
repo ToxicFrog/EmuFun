@@ -19,14 +19,12 @@ flags.register("log-file") {
 }
 
 local _log
-local _log_level = "warning"
 
 log = {}
 setmetatable(log, log)
 
 function log.init()
   local file = os.date(flags.parsed.log_file)
-  _log_level = flags.parsed.log_level
 
   if flags.parsed.log_file ~= "" then
     if lfs then
@@ -39,7 +37,7 @@ end
 
 function log:__call(level, ...)
   for i=level,#log_levels do
-    if _log_level == log_levels[i] then
+    if flags.parsed.log_level == log_levels[i] then
       print(log_levels[level]:upper(), string.format(...))
       if _log then
         _log:write(log_levels[level]:upper().."\t"..string.format(...).."\n")
