@@ -3,7 +3,18 @@ emufun = {
 }
 
 package.cpath = package.cpath..";/usr/lib64/lua/5.1/?.so"
+
 require "lfs"
+require "util"
+require "logging"
+require "input"
+require "settings"
+
+flags.register("library-paths", "L") {
+    help = "Comma-separated paths to the media library or libraries";
+    type = flags.list;
+    default = {};
+}
 
 local init = {}
 
@@ -14,13 +25,6 @@ function state(name)
 end
 
 function love.load()
-  -- We need to load all the libraries first so that they can register their
-  -- command line flags, and so that logging functions are available.
-  require "util"
-  require "logging"
-  require "input"
-  require "settings"
-
   init.init()
 end
 
