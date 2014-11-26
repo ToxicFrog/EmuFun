@@ -24,9 +24,9 @@ function emufun.initConfig()
   end
   for _,file in ipairs(love.filesystem.getDirectoryItems("default")) do
     local path = "%s/%s" % { config_dir, file }
-    LOG.DEBUG("Checking configuration file: %s", path)
+    log.debug("Checking configuration file: %s", path)
     if emufun.config.flags.overwrite_config or not lfs.exists(path) then
-      LOG.INFO("Writing new configuration file to user settings directory: %s", path)
+      log.info("Writing new configuration file to user settings directory: %s", path)
       io.writefile(path, love.filesystem.read("default/%s" % file))
     end
   end
@@ -36,13 +36,13 @@ function emufun.loadConfig(name)
   local default, user = function() end, function() end
 
   if love.filesystem.exists("default/%s.cfg" % name) then
-    LOG.INFO("Loading default configuration file %s.cfg", name)
+    log.info("Loading default configuration file %s.cfg", name)
     default = love.filesystem.load("default/%s.cfg" % name)
   end
 
   local path = "%s/%s.cfg" % { emufun.config.flags.config_dir, name }
   if not emufun.config.flags.default_config and lfs.exists(path) then
-    LOG.INFO("Loading user configuration file %s", path)
+    log.info("Loading user configuration file %s", path)
     user = loadfile(path)
   end
 

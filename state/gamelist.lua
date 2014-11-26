@@ -12,12 +12,12 @@ end
 local function push(node, ...)
     show()
     table.insert(views, new "View" (node.icon, node:path(), node, ...))
-    LOG.DEBUG("Push: %s", peek().title)
+    log.debug("Push: %s", peek().title)
 end
 
 local function pop()
     show()
-    LOG.DEBUG("Pop: %s", table.remove(views).title)
+    log.debug("Pop: %s", table.remove(views).title)
     if peek() == in_menu then
         in_menu = false
     end
@@ -36,7 +36,7 @@ end
 local function contract()
     show()
     if #views > 1 then
-        LOG.DEBUG("Contract: %s -> %s", peek().title, peek(1).title)
+        log.debug("Contract: %s -> %s", peek().title, peek(1).title)
         pop()
     end
 end
@@ -48,11 +48,11 @@ local function menu()
     if not visible then
         show()
     elseif not in_menu then
-        LOG.DEBUG("Showing menu")
+        log.debug("Showing menu")
         in_menu = peek()
         push(emufun.menu)
     else
-        LOG.DEBUG("Hiding menu")
+        log.debug("Hiding menu")
         while in_menu do pop() end
     end
 end
@@ -62,7 +62,7 @@ end
 -- or a number N indicating "go back N levels"
 local function expand()
     local next = { peek():selected():run() }
-    LOG.DEBUG("Expand: %s -> %s", peek().title, peek():selected().name)
+    log.debug("Expand: %s -> %s", peek().title, peek():selected().name)
     if type(next[1]) == "number" then
         for i=1,next[1] do
             contract()

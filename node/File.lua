@@ -17,7 +17,7 @@ function File:__init(...)
     self.metadata = lfs.attributes(self:path())
     self.cache = cache.get(self:path())
     if self.metadata.modification ~= self.cache.ts then
-        LOG.DEBUG("File '%s' updated (%d ~= %d), updating cache", self:path(), self.metadata.modification, self.cache.ts)
+        log.debug("File '%s' updated (%d ~= %d), updating cache", self:path(), self.metadata.modification, self.cache.ts)
         self.cache.ts = self.metadata.modification
         cache.save()
     end
@@ -70,8 +70,8 @@ function File:run()
             return v(self)
         elseif type(v) == "string" then
             local cmd = self:expandcommand(v)
-            LOG.INFO("Executing command: %s", cmd)
-            LOG.DEBUG("  => %s", tostring(os.execute(cmd)))
+            log.info("Executing command: %s", cmd)
+            log.debug("  => %s", tostring(os.execute(cmd)))
             return false
         elseif type(v) == "table" then
             local rv

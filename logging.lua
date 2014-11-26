@@ -21,10 +21,10 @@ flags.register("log-file") {
 local _log
 local _log_level = "warning"
 
-LOG = {}
-setmetatable(LOG, LOG)
+log = {}
+setmetatable(log, log)
 
-function LOG.init()
+function log.init()
   local file = os.date(flags.parsed.log_file)
   _log_level = flags.parsed.log_level
 
@@ -33,11 +33,11 @@ function LOG.init()
       lfs.rmkdir(lfs.dirname(file))
     end
     _log = io.open(file, "a")
-    LOG.INFO("Opened log file '%s'", file)
+    log.info("Opened log file '%s'", file)
   end
 end
 
-function LOG:__call(level, ...)
+function log:__call(level, ...)
   for i=level,#log_levels do
     if _log_level == log_levels[i] then
       print(log_levels[level]:upper(), string.format(...))
@@ -50,18 +50,18 @@ function LOG:__call(level, ...)
   end
 end
 
-function LOG.ERROR(...)
-  return LOG(1, ...)
+function log.error(...)
+  return log(1, ...)
 end
 
-function LOG.WARNING(...)
-  return LOG(2, ...)
+function log.warning(...)
+  return log(2, ...)
 end
 
-function LOG.INFO(...)
-  return LOG(3, ...)
+function log.info(...)
+  return log(3, ...)
 end
 
-function LOG.DEBUG(...)
-  return LOG(4, ...)
+function log.debug(...)
+  return log(4, ...)
 end

@@ -50,17 +50,17 @@ function init.init()
 
   -- At this point we finally know what the log file is named, if anything, so
   -- we open it.
-  LOG.init()
+  log.init()
 
   for k,v in pairs(emufun.config.flags) do
-    LOG.DEBUG("FLAG\t%s\t%s", tostring(k), tostring(v))
+    log.debug("FLAG\t%s\t%s", tostring(k), tostring(v))
   end
 
   -- Now we are done processing the main user config and the command line flags
   -- and can continue with initialization.
 
   for k,v in pairs(emufun.config) do
-    LOG.DEBUG("CFG\t%s\t%s", tostring(k), tostring(v))
+    log.debug("CFG\t%s\t%s", tostring(k), tostring(v))
   end
 
   -- Load image files from disk.
@@ -87,7 +87,7 @@ end
 
 local _errhand = love.errhand
 function love.errhand(...)
-  LOG.ERROR("Error: %s", debug.traceback((...)))
+  log.error("Error: %s", debug.traceback((...)))
   return _errhand(...)
 end
 

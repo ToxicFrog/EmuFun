@@ -6,7 +6,7 @@ local CACHE_PATH = love.filesystem.getSaveDirectory().."/cache"
 -- cache format
 -- TS\tFLAGS\tPATH\n
 function cache.load()
-  LOG.INFO("Loading cache...")
+  log.info("Loading cache...")
   for line in io.lines(CACHE_PATH) do
     local ts,flags,path = line:match("(%d+)\t(%w*)\t(.*)")
     _cache[path] = { ts = tonumber(ts), flags = {} }
@@ -22,7 +22,7 @@ function cache.load()
 end
 
 function cache.save()
-  LOG.INFO("Saving cache...")
+  log.info("Saving cache...")
   local fd = io.open(CACHE_PATH..".tmp", "wb")
   for path,data in pairs(_cache) do
     local flags = {}
@@ -37,7 +37,7 @@ function cache.save()
     res,err = os.rename(CACHE_PATH..".tmp", CACHE_PATH)
   end
   if not res then
-    LOG.ERROR("Cache save failed: %s", tostring(err))
+    log.error("Cache save failed: %s", tostring(err))
   end
 end
 

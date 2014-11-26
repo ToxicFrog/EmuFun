@@ -20,12 +20,12 @@ function Directory:__init(...)
     if self.metadata then
         self.cache = cache.get(self:path())
         if self.metadata.modification ~= self.cache.ts then
-            LOG.DEBUG("Directory '%s' updated (%d ~= %d), updating cache", self:path(), self.metadata.modification, self.cache.ts)
+            log.debug("Directory '%s' updated (%d ~= %d), updating cache", self:path(), self.metadata.modification, self.cache.ts)
             self.cache.ts = self.metadata.modification
             cache.save()
         end
     else
-        LOG.WARNING("Unable to stat() %s", self:path())
+        log.warning("Unable to stat() %s", self:path())
         self.cache = { flags = {}, ts = 0 }
     end
 end
