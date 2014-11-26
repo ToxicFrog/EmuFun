@@ -14,7 +14,7 @@ flags.register("log-level", "v") {
 }
 flags.register("log-file") {
   help = "Save logs to this file. strftime() escapes are permitted.";
-  default = love.filesystem.getSaveDirectory().."/logs/%F %H.%M.%S.log";
+  default = love.filesystem.getSaveDirectory().."/logs/%Y-%m-%d %H.%M.%S.log";
   type = flags.string;
 }
 
