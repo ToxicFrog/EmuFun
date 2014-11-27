@@ -47,10 +47,7 @@ local fullscreen_toggle = ToggleSetting:new {
     name = "Fullscreen";
     value = emufun.config.fullscreen;
     apply = function(self)
-        if emufun.config.fullscreen ~= self.value then
-            love.window.toggleFullscreen()
-        end
-        emufun.config.fullscreen = self.value
+        window.fullscreen(self.value)
     end;
 }
 

@@ -9,6 +9,7 @@ require "util"
 require "logging"
 require "input"
 require "settings"
+require "window"
 
 flags.register("library-paths", "L") {
     help = "Comma-separated paths to the media library or libraries";
@@ -56,6 +57,8 @@ function init.init()
   -- we open it.
   log.init()
 
+  window.init()
+
   for k,v in pairs(flags.parsed) do
     log.debug("FLAG\t%s\t%s", tostring(k), tostring(v))
   end
@@ -67,17 +70,11 @@ function init.init()
     log.debug("CFG\t%s\t%s", tostring(k), tostring(v))
   end
 
-  -- Load image files from disk.
-  init.images()
-
   -- Load user control settings.
   emufun.loadConfig "controls" (setmetatable({ emufun = emufun, love = love }, { __index = input }))
 
   -- Load top-level library configuration (file types, etc).
   emufun.config._library_config_fn = emufun.loadConfig "library"
-
-  -- Initialize screen.
-  init.graphics()
 
   return state "load-libraries" ()
 end
@@ -104,38 +101,4 @@ function init.argv()
   table.merge(emufun.config, flags.parsed)
   -- Flags from the default settings are only taken if nothing has overridden them.
   table.merge(emufun.config, flags.defaults, "ignore")
-end
-
-function init.images()
-  emufun.images = {}
-  for _,file in ipairs(love.filesystem.getDirectoryItems "images") do
-    if file:match("%.png$") then
-      emufun.images[file:sub(1,-5)] = love.graphics.newImage("images/" .. file)
-    end
-  end
-end
-
-function init.graphics()
-  -- if the user specified a resolution in emufun.cfg, we use that
-  -- otherwise, conf.lua has already set things up for us properly: borderless
-  -- fullscreen at desktop resolution.
-  if emufun.config.fullscreen == nil then
-      emufun.config.fullscreen = true
-  end
-  if emufun.config.width and emufun.config.height then
-      love.window.setMode(emufun.config.width, emufun.config.height, {
-        fullscreen = emufun.config.fullscreen;
-        -- "desktop" doesn't work if the user wants a resolution other than desktop res
-        -- and if they *did* want that, they just need to leave things at the defaults
-        fullscreentype = "normal";
-      })
-  else
-    emufun.config.width,emufun.config.height = love.graphics.getDimensions()
-    emufun.config.fullscreen = false -- borderless doesn't require toggleFullscreen()
-  end
-
-  --love.graphics.setFont("LiberationMono-Bold.ttf", 24)
-  love.graphics.setNewFont(math.floor(emufun.config.height/emufun.config.lines) - 8)
-  love.graphics.setBackgroundColor(0, 0, 0)
-  love.mouse.setVisible(false)
 end

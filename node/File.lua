@@ -88,8 +88,7 @@ function File:run()
     -- if not, we fall through to the error
     if self.execute then
         local fs = love.window.getFullscreen()
-
-        love.window.setFullscreen(false)
+        window.fullscreen(false)
 
         local rv = exec(self.execute) or 0
 
@@ -98,8 +97,7 @@ function File:run()
             cache.save()
         end
 
-        love.window.setFullscreen(fs)
-
+        window.fullscreen(fs)
         return rv
     end
 
