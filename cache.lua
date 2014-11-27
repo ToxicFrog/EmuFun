@@ -10,8 +10,8 @@ function cache.load()
   for line in io.lines(CACHE_PATH) do
     local ts,flags,path = line:match("(%d+)\t(%w*)\t(.*)")
     _cache[path] = { ts = tonumber(ts), flags = {} }
-    for flag in flags:gmatch("[^,]+") do
-      local k,v = flag:match("^([^:]+):(.*)")
+    for flag in flags:gmatch("[^;]+") do
+      local k,v = flag:match("^([^=]+)=(.*)")
       if k then
         _cache[path].flags[k] = v
       else
@@ -26,10 +26,16 @@ function cache.save()
   local fd = io.open(CACHE_PATH..".tmp", "wb")
   for path,data in pairs(_cache) do
     local flags = {}
-    for flag in pairs(data.flags) do
-      table.insert(flags, flag)
+    for flag,value in pairs(data.flags) do
+      if value == false then
+        -- skip
+      elseif value == true then
+        table.insert(flags, flag)
+      else
+        table.insert(flags, flag.."="..tostring(value))
+      end
     end
-    fd:write("%d\t%s\t%s\n" % { data.ts, table.concat(flags, ":"), path })
+    fd:write("%d\t%s\t%s\n" % { data.ts, table.concat(flags, ";"), path })
   end
   fd:close()
   local res,err = os.remove(CACHE_PATH)
