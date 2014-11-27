@@ -4,6 +4,11 @@ emufun = {
 
 package.cpath = package.cpath..";/usr/lib64/lua/5.1/?.so"
 
+function love.update(dt)
+  -- cap framerate at 30fps
+  love.timer.sleep(1/30 - dt)
+end
+
 require "lfs"
 require "util"
 require "logging"
@@ -80,11 +85,6 @@ function init.init()
 end
 
 function love.draw() end
-
-function love.update(dt)
-  -- cap framerate at 30fps
-  love.timer.sleep(1/30 - dt)
-end
 
 local _errhand = love.errhand
 function love.errhand(...)
