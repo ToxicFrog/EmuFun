@@ -1,0 +1,25 @@
+## emufun 1.1
+
+- Fixes:
+  - Too many to list
+- Changes:
+  - Updated engine from 0.7.2 to 0.9.1
+  - Moved settings from settings.lua into config/{emufun,controls,library}.cfg
+  - Total overhaul of how configuration files work
+  - Most configuration settings can now be overridden on the command line
+  - Replaced calibration on startup with sensible default controls and a controls.cfg file
+  - Text size now scales based on resolution and the number of lines of text you want displayed
+- Additions:
+  - Added support for icons
+  - Added basic library metadata support (so far, only what you have/haven't seen)
+  - Added basic support for loading multiple media libraries at once
+  - Added support for OS-specific configurations
+  - LuaFilesystem library now integrated into windows build
+  - Added new options to disable keyboard or controller input
+  - Added a context menu
+  - Added built-in support for launching a config file editor (requires you to configure your external editor)
+  - Added timestamp-named logfiles
+
+## emufun 1.0
+
+Initial release.
