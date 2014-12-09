@@ -1,5 +1,29 @@
 window = {}
 
+flags.register("fullscreen", "f") {
+  help = "Run emufun in fullscreen mode.";
+  default = true;
+}
+flags.register("borderless") {
+  help = "Use a borderless fullscreen window rather than switching modes.";
+  default = true;
+}
+flags.register("width") {
+  help = "Horizontal resolution when not using borderless fullscreen.";
+  default = 0;
+  type = flags.number;
+}
+flags.register("height") {
+  help = "Vertical resolution when not using borderless fullscreen.";
+  default = 0;
+  type = flags.number;
+}
+flags.register("lines") {
+  help = "Number of lines of text to display.";
+  default = 25;
+  type = flags.number;
+}
+
 function window.init()
   -- load image files
   emufun.images = {}
@@ -9,27 +33,16 @@ function window.init()
     end
   end
 
-  -- initialize graphics mode
-  -- if the user specified a resolution in emufun.cfg, we use that
-  -- otherwise, conf.lua has already set things up for us properly: borderless
-  -- fullscreen at desktop resolution.
-  if emufun.config.fullscreen == nil then
-      emufun.config.fullscreen = true
-  end
-  if emufun.config.width and emufun.config.height then
-      love.window.setMode(emufun.config.width, emufun.config.height, {
-        fullscreen = emufun.config.fullscreen;
-        -- "desktop" doesn't work if the user wants a resolution other than desktop res
-        -- and if they *did* want that, they just need to leave things at the defaults
-        fullscreentype = "normal";
-      })
-  else
-    emufun.config.width,emufun.config.height = love.graphics.getDimensions()
-    emufun.config.fullscreen = false -- borderless doesn't require toggleFullscreen()
-  end
+  -- Initialize graphics.
+  log.info("Initializing graphics: %dx%d fullscreen=%s borderless=%s",
+    emufun.config.width, emufun.config.height,
+    tostring(emufun.config.fullscreen), tostring(emufun.config.borderless))
+  love.window.setMode(emufun.config.width, emufun.config.height, {
+    fullscreen = emufun.config.fullscreen;
+    fullscreentype = emufun.config.borderless and "desktop" or "normal";
+  })
 
-  --love.graphics.setFont("LiberationMono-Bold.ttf", 24)
-  love.graphics.setNewFont(math.floor(emufun.config.height/emufun.config.lines) - 8)
+  love.graphics.setNewFont(math.floor(love.window.getHeight()/emufun.config.lines) - 8)
   love.graphics.setBackgroundColor(0, 0, 0)
   love.mouse.setVisible(false)
 end

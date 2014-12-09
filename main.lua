@@ -58,22 +58,21 @@ function init.init()
   -- over the user configuration file.
   init.argv()
 
+  -- Now we are done processing the main user config and the command line flags
+  -- and can continue with initialization.
+  for k,v in pairs(flags.parsed) do
+    log.debug("FLAG\t%s\t%s", tostring(k), tostring(v))
+  end
+
+  for k,v in pairs(emufun.config) do
+    log.debug("CFG\t%s\t%s", tostring(k), tostring(v))
+  end
+
   -- At this point we finally know what the log file is named, if anything, so
   -- we open it.
   log.init()
 
   window.init()
-
-  for k,v in pairs(flags.parsed) do
-    log.debug("FLAG\t%s\t%s", tostring(k), tostring(v))
-  end
-
-  -- Now we are done processing the main user config and the command line flags
-  -- and can continue with initialization.
-
-  for k,v in pairs(emufun.config) do
-    log.debug("CFG\t%s\t%s", tostring(k), tostring(v))
-  end
 
   -- Load user control settings.
   emufun.loadConfig "controls" (setmetatable({ emufun = emufun, love = love }, { __index = input }))
@@ -98,7 +97,7 @@ end
 
 function init.argv()
   -- Parse command line flags. Flags from argv overwrite anything already present.
-  table.merge(emufun.config, flags.parsed)
+  table.merge(emufun.config, flags.parsed, "overwrite")
   -- Flags from the default settings are only taken if nothing has overridden them.
   table.merge(emufun.config, flags.defaults, "ignore")
 end

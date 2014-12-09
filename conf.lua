@@ -8,9 +8,9 @@ function love.conf(t)
 
     t.window.title = 'EmuFun'
     t.window.resizable = false
-    t.window.width = 0
-    t.window.height = 0
-    t.window.fullscreen = true
+    t.window.width = 640
+    t.window.height = 480
+    t.window.fullscreen = false
     t.window.fullscreentype = "desktop"
 
     t.modules.graphics = true
