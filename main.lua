@@ -17,17 +17,27 @@ require "settings"
 require "window"
 
 flags.register("library-paths", "L") {
-    help = "Comma-separated paths to the media library or libraries";
-    type = flags.list;
-    default = {};
+  help = "Comma-separated paths to the media library or libraries.";
+  type = flags.list;
+  default = {};
+}
+flags.register("editor") {
+  help = "Program to use when editing configuration files.";
+  type = flags.string;
+  default = love._os == "Windows" and "wordpad" or "gedit";
+}
+flags.register("cfg-names") {
+  help = "Comma-separated list of config file names to search for in the media library.";
+  type = flags.list;
+  default = { ".emufun", "emufun.cfg" };
 }
 
 local init = {}
 
 function state(name)
-    return function(...)
-        return love.filesystem.load("state/" .. name .. ".lua")(...)
-    end
+  return function(...)
+    return love.filesystem.load("state/" .. name .. ".lua")(...)
+  end
 end
 
 function love.load()

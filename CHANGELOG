@@ -6,7 +6,7 @@
   - Updated engine from 0.7.2 to 0.9.1
   - Moved settings from settings.lua into config/{emufun,controls,library}.cfg
   - Total overhaul of how configuration files work
-  - Most configuration settings can now be overridden on the command line
+  - All configuration settings can now be overridden on the command line
   - Replaced calibration on startup with sensible default controls and a controls.cfg file
   - Text size now scales based on resolution and the number of lines of text you want displayed
 - Additions:
