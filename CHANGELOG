@@ -1,3 +1,7 @@
+## emufun 1.2
+
+- Per-directory rather than per-user metadata cache files
+
 ## emufun 1.1
 
 - Fixes:

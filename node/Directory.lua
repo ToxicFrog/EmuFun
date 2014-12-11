@@ -104,12 +104,20 @@ end
 
 function Directory:populateFromDisk(cache)
     local nodes = {}
+    local files = {}
     for item in lfs.dir(self:path()) do
         local is_dir = lfs.attributes(self:path(item), "mode") == "directory"
         local node = new(is_dir and "node.Directory" or "node.File") {
             name = item, parent = self, cache = cache;
         }
         nodes[node] = true
+        files[item] = true
+    end
+    -- Clear items from the cache that no longer exist on disk.
+    for path in cache:all() do
+        if not files[path] then
+            cache:remove(path)
+        end
     end
     return nodes
 end

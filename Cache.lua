@@ -1,10 +1,10 @@
 --[[
-Notes towards a better metadata implementation
+Metadata cache implementation for EmuFun. Each Cache object is responsible
+for a single associated cache file; at present each file corresponds to a
+single directory, but there's nothing blocking the implementation of an old-
+style global cache option, apart from the way Files and Directories query the
+cache.
 
-Current approach is a single flat file, one line per record, each record
-consisting of ts, attributes, and absolute path to file
-
-Cache attributes turn into node.cache.{ts,*} once loaded.
 
 Planned change:
 - API turns into attributes directly on the nodes; Node:getattr() and
@@ -107,6 +107,10 @@ end
 
 function Cache:all()
   return pairs(self.contents)
+end
+
+function Cache:remove(path)
+  self.contents[path] = nil
 end
 
 return Cache
