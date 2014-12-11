@@ -16,6 +16,8 @@ require "input"
 require "settings"
 require "window"
 
+require "Cache" -- for --cache-name
+
 flags.register("library-paths", "L") {
   help = "Comma-separated paths to the media library or libraries.";
   type = flags.list;

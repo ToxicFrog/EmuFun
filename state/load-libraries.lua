@@ -43,6 +43,7 @@ local configs = new "node.Directory" {
     path = function(self, name)
         return love.filesystem.getSaveDirectory().."/config/"..(name or "");
     end;
+    cache = new "Cache" ();
 }
 
 -- TODO: add a "text" file type, with appropriate default editor and icon, and
@@ -57,7 +58,12 @@ configs.config = loadstring [[
 root:add(configs)
 
 for _,path in ipairs(emufun.config.library_paths) do
-    local lib = new "node.Directory" { name = path, parent = library }
+    log.debug("Creating top level library node for '%s'", path)
+    local lib = new "node.Directory" {
+        name = path;
+        parent = library;
+        cache = new "Cache" ();
+    }
     lib:populate()
 
     if lib[1] then

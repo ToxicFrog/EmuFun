@@ -42,7 +42,6 @@ local function contract()
 end
 
 require "mainmenu"
-local cache = require "cache"
 
 local function menu()
     if not visible then
@@ -81,17 +80,21 @@ end
 
 local function toggle_seen()
     local node = peek():selected()
-    node.cache.flags.seen = not node.cache.flags.seen
-    cache.save()
+    node.attr.seen = not node.attr.seen
+    node.cache:save()
 end
 
 local function toggle_seen_recursive()
     local node = peek():selected()
-    local seen = not node.cache.flags.seen
+    local seen = not node.attr.seen
+    local caches = {}
     node:walk(function(self)
-        self.cache.flags.seen = seen
+        self.attr.seen = seen
+        caches[self.cache] = true
     end)
-    cache.save()
+    for cache in pairs(caches) do
+        cache:save()
+    end
 end
 
 local root, library = ...

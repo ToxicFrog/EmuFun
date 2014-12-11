@@ -38,10 +38,9 @@ flags.register("cache-name") {
 }
 
 function Cache:__init(path)
-  Object.__init(self, {
-    path = path .. "/" .. emufun.config.cache_name;
-    contents = {};
-  })
+  self.path = path and (path .. "/" .. emufun.config.cache_name);
+  self.contents = {};
+  self:load()
 end
 
 -- The metadata cache is a line-oriented format; each line holds the record for
@@ -49,10 +48,19 @@ end
 -- The attributes are semicolon-separated. Each one is either key=value, or
 -- just key (in which case the value is implicitly true).
 function Cache:load()
+  if not self.path then return end
+  if not lfs.exists(self.path) then
+    log.debug("Creating new cache: %s", self.path)
+    self.ts = 0
+    self.contents = {}
+    return
+  end
+
   log.debug("Loading cache: %s", self.path)
+  self.ts = lfs.attributes(self.path, "modification")
   self.contents = {}
   for line in io.lines(self.path) do
-    local attrs,path = line:match("(%S+)\t(.*)")
+    local attrs,path = line:match("(%S*)\t(.*)")
     self.contents[path] = {}
     for attr in attrs:gmatch("[^;]+") do
       local k,v = attr:match("^([^=]+)=(.*)")
@@ -66,6 +74,7 @@ function Cache:load()
 end
 
 function Cache:save()
+  if not self.path then return end
   log.debug("Saving cache: %s", self.path)
 
   local fd,err = io.open(self.path, "wb")
@@ -80,10 +89,10 @@ function Cache:save()
       if v == true then
         table.insert(attrs, k)
       elseif v then
-        table.insert(attrs, "%s=%s", k, tostring(v))
+        table.insert(attrs, "%s=%s" % { k, tostring(v) })
       end
     end
-    fd:write("%s\t%s\n" % { table.concat(flags, ";"), path })
+    fd:write("%s\t%s\n" % { table.concat(attrs, ";"), path })
   end
 
   fd:close()
@@ -91,9 +100,13 @@ end
 
 function Cache:get(path)
   if not self.contents[path] then
-    self.contents[path] = { ts = 0 }
+    self.contents[path] = {}
   end
   return self.contents[path]
+end
+
+function Cache:all()
+  return pairs(self.contents)
 end
 
 return Cache

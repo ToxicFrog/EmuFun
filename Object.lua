@@ -17,7 +17,7 @@ function Object:clone(name)
 	end
 	child.__index = child
 	child._NAME = name
-	
+
 	return child
 end
 

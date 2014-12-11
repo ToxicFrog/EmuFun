@@ -1,4 +1,3 @@
-local cache = require "cache"
 local Node = require "node.Node"
 local File = Node:clone("node.File")
 
@@ -6,31 +5,26 @@ File.icon = emufun.images.file
 
 function File:__init(...)
     Node.__init(self, ...)
+    self.attr = self.cache:get(self.name)
 
     -- load configuration from disk, if present
     local cfg = new "Configuration" (self)
     self:loadConfig()
     self:configure(cfg)
     cfg:finalize()
-
-    -- load cache data
-    self.metadata = lfs.attributes(self:path())
-    self.cache = cache.get(self:path())
-    if self.metadata.modification ~= self.cache.ts then
-        log.debug("File '%s' updated (%d ~= %d), updating cache", self:path(), self.metadata.modification, self.cache.ts)
-        self.cache.ts = self.metadata.modification
-        cache.save()
-    end
 end
 
 function File:colour()
-    if self.cache.flags.seen then
+    if self.attr.seen then
         return 0, 192, 255
     else
         return Node.colour(self)
     end
 end
 
+-- Files named "foo.emufun" are loaded as config files and applied to themselves;
+-- this lets you write a foo.emufun that shows up as foo and has a custom run
+-- function.
 function File:loadConfig()
     if self.name:match("%.emufun$") then
         self.config = assert(loadfile(self:path()))
@@ -92,9 +86,9 @@ function File:run()
 
         local rv = exec(self.execute) or 0
 
-        if not self.cache.flags.seen then
-            self.cache.flags.seen = true
-            cache.save()
+        if not self.attr.seen then
+            self.attr.seen = true
+            self.cache:save()
         end
 
         window.fullscreen(fs)
