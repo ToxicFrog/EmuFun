@@ -54,7 +54,7 @@ function Directory:loadConfigForChildren()
     end
 end
 
-function Directory:populate(...)
+function Directory:populate(invalidate_cache)
     -- Load the configuration file, if one exists and we haven't previously.
     self:loadConfigForChildren()
 
@@ -69,7 +69,7 @@ function Directory:populate(...)
     end
 
     local nodes
-    if cache.ts >= ts then
+    if cache.ts >= ts and not invalidate_cache then
         log.debug("Directory '%s' cache hit", self:path())
         nodes = self:populateFromCache(cache)
     else
