@@ -80,7 +80,7 @@ end
 local function toggle_seen()
     local node = peek():selected()
     node.attr.seen = not node.attr.seen
-    node.cache:save()
+    node.cache:save(true)
 end
 
 local function toggle_seen_recursive()
@@ -92,7 +92,7 @@ local function toggle_seen_recursive()
         caches[self.cache] = true
     end)
     for cache in pairs(caches) do
-        cache:save()
+        cache:save(true)
     end
 end
 

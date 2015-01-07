@@ -84,12 +84,12 @@ function File:run()
         local fs = love.window.getFullscreen()
         window.fullscreen(false)
 
-        local rv = exec(self.execute) or 0
-
         if not self.attr.seen then
             self.attr.seen = true
-            self.cache:save()
+            self.cache:save(true)
         end
+
+        local rv = exec(self.execute) or 0
 
         window.fullscreen(fs)
         return rv

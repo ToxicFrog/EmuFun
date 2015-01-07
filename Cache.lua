@@ -73,7 +73,7 @@ function Cache:load()
   end
 end
 
-function Cache:save()
+function Cache:save(reset_ts)
   if not self.path then return end
   log.debug("Saving cache: %s", self.path)
 
@@ -96,6 +96,9 @@ function Cache:save()
   end
 
   fd:close()
+  if reset_ts then
+    lfs.touch(self.path, self.ts)
+  end
 end
 
 function Cache:get(path)
