@@ -8,7 +8,7 @@ LOVE="0.9.1"
 
 function main() {
   prepare
-  [[ $@ ]] || set -- make-love make-win32 make-win64 make-osx deploy
+  [[ $@ ]] || set -- make-love make-win32 make-osx deploy
   while [[ $1 ]]; do
     $1 $BRANCH
     shift
@@ -73,13 +73,6 @@ function make-win32() {
   make-win $1 win32
   mv .build/emufun.zip "release/emufun-win32-$1.zip"
 }
-
-# We don't have a 64-bit binary for lfs.dll. This is disabled until we do.
-# function make-win64() {
-#   echo "Making emufun-win64-$1.zip"
-#   make-win $1 win64
-#   mv .build/emufun.zip "release/emufun-win64-$1.zip"
-# }
 
 function deploy() {
   echo "Deploying binaries to orias"
