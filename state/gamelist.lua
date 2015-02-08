@@ -74,7 +74,7 @@ local function expand()
 end
 
 local function reload()
-    peek():selected():populate(true) -- reload invalidating cache
+    peek():reload()
 end
 
 local function toggle_seen()

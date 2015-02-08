@@ -10,15 +10,31 @@ function View:__init(icon, title, ...)
 	self.index = 1
 	self.icon = icon
 	self.title = title
-	self.list = {}
+    self.nodes = {...}
 
-	for _,node in ipairs {...} do
-		for child in node:children() do
-			if not child.hidden then
-				table.insert(self.list, child)
-			end
-		end
-	end
+    self:populate(self.nodes)
+end
+
+function View:populate(nodes)
+    self.list = {}
+    for _,node in ipairs(nodes) do
+        for child in node:children() do
+            if not child.hidden then
+                table.insert(self.list, child)
+            end
+        end
+    end
+end
+
+function View:reload()
+    for _,node in ipairs(self.nodes) do
+        if node.populate then
+            node:populate(true)
+        else
+            log.error("In View:reload(): attempt to populate a file (%s)", node:path())
+        end
+    end
+    self:populate(self.nodes)
 end
 
 local W,H = love.graphics.getWidth(),love.graphics.getHeight()
