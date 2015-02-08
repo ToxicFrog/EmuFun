@@ -2,7 +2,7 @@
 
 ZIP="zip -db -dc -q"
 UNZIP="unzip -q -o"
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
+[[ $BRANCH ]] || BRANCH=$(git rev-parse --abbrev-ref HEAD)
 SRC="$(git ls-files | egrep -v ^examples/)"
 LOVE="0.9.1"
 
